@@ -13,30 +13,28 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
-    // thse properties are for interfaceing with the API
-    // the user can access these arrays at any time and plot them if they like
-    var timeData:[Float]
-    var fftData:[Float]
+    private var _timeData:[Float]
+    // this is a computed property in swift
+    // when asked for, the array will be calculated from the input buffer
+    var timeData:[Float]{
+        get{
+            self.inputBuffer!.fetchFreshData(&_timeData, withNumSamples: Int64(BUFFER_SIZE))
+            return _timeData
+        }
+    }
     
     // MARK: Public Methods
     init(buffer_size:Int) {
         BUFFER_SIZE = buffer_size
         // anything not lazily instatntiated should be allocated here
-        timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
-        fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
+        _timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
     }
     
     // public function for starting processing of microphone data
-    func startMicrophoneProcessing(withFps:Double){
+    func startMicrophoneProcessing(){
         // setup the microphone to copy to circualr buffer
         self.audioManager?.inputBlock = self.handleMicrophone
         
-        // repeat this fps times per second using the timer class
-        //   every time this is called, we update the arrays "timeData" and "fftData"
-        Timer.scheduledTimer(timeInterval: 1.0/withFps, target: self,
-                            selector: #selector(self.runEveryInterval),
-                            userInfo: nil,
-                            repeats: true)
     }
     
     
@@ -52,10 +50,6 @@ class AudioModel {
         return Novocaine.audioManager()
     }()
     
-    private lazy var fftHelper:FFTHelper? = {
-        return FFTHelper.init(fftSize: Int32(BUFFER_SIZE))
-    }()
-    
     
     private lazy var inputBuffer:CircularBuffer? = {
         return CircularBuffer.init(numChannels: Int64(self.audioManager!.numInputChannels),
@@ -69,22 +63,7 @@ class AudioModel {
     
     //==========================================
     // MARK: Model Callback Methods
-    @objc
-    private func runEveryInterval(){
-        if inputBuffer != nil {
-            // copy time data to swift array
-            self.inputBuffer!.fetchFreshData(&timeData, withNumSamples: Int64(BUFFER_SIZE))
-            
-            // now take FFT
-            fftHelper!.performForwardFFT(withData: &timeData,
-                                         andCopydBMagnitudeToBuffer: &fftData)
-            // at this point, we have saved the data to the arrays:
-            //   timeData: the raw audio samples
-            //   fftData:  the FFT of those same samples
-            // the user can now use these variables however they like
-            
-        }
-    }
+    
     
     //==========================================
     // MARK: Audiocard Callbacks

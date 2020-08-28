@@ -25,18 +25,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        // add in graphs for display
-        graph?.addGraph(withName: "fft",
-                        shouldNormalize: true,
-                        numPointsInGraph: AUDIO_BUFFER_SIZE/2)
-        
+        // add in a graph for displaying the audio
         graph?.addGraph(withName: "time",
             shouldNormalize: false,
             numPointsInGraph: AUDIO_BUFFER_SIZE)
         
         // start up the audio model here, querying microphone
-        audio.startMicrophoneProcessing(withFps: 10)
+        audio.startMicrophoneProcessing()
 
         audio.play()
         
@@ -51,11 +46,7 @@ class ViewController: UIViewController {
     // periodically, update the graph with refreshed FFT Data
     @objc
     func updateGraph(){
-        self.graph?.updateGraph(
-            data: self.audio.fftData,
-            forKey: "fft"
-        )
-        
+        // periodically, deisplay the audio data
         self.graph?.updateGraph(
             data: self.audio.timeData,
             forKey: "time"
