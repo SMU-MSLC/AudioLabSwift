@@ -14,13 +14,39 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1000" minValue="0.0" maxValue="20000" translatesAutoresizingMaskIntoConstraints="NO" id="cgR-zF-XiM">
+                                <rect key="frame" x="18" y="438" width="378" height="31"/>
+                                <connections>
+                                    <action selector="changeFrequency:" destination="BYZ-38-t0r" eventType="valueChanged" id="KeH-yC-lQK"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency: 1000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bPQ-GL-zf3">
+                                <rect key="frame" x="20" y="409" width="375" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="cgR-zF-XiM" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="6KP-6f-oj8"/>
+                            <constraint firstItem="cgR-zF-XiM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="9oS-pV-Vky"/>
+                            <constraint firstItem="cgR-zF-XiM" firstAttribute="top" secondItem="bPQ-GL-zf3" secondAttribute="bottom" constant="8" id="PIQ-Rz-NRB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="cgR-zF-XiM" secondAttribute="trailing" constant="20" id="ZyZ-sD-cNX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bPQ-GL-zf3" secondAttribute="trailing" constant="19" id="dgn-fb-PyJ"/>
+                            <constraint firstItem="bPQ-GL-zf3" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="fRt-TT-Lfi"/>
+                            <constraint firstItem="cgR-zF-XiM" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="nke-Kr-dCQ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="freqLabel" destination="bPQ-GL-zf3" id="N8o-NI-bkU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="86"/>
+            <point key="canvasLocation" x="137.68115942028987" y="85.714285714285708"/>
         </scene>
     </scenes>
 </document>
