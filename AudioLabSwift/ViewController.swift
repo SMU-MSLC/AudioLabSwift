@@ -46,7 +46,7 @@ class ViewController: UIViewController {
     // periodically, update the graph with refreshed FFT Data
     @objc
     func updateGraph(){
-        // periodically, deisplay the audio data
+        // periodically, display the audio data
         self.graph?.updateGraph(
             data: self.audio.timeData,
             forKey: "time"

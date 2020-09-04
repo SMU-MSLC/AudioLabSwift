@@ -61,7 +61,6 @@
 		B65B5A4D24F4409F00E74E73 = {
 			isa = PBXGroup;
 			children = (
-				B65B5A7E24F4798B00E74E73 /* Shaders.metal */,
 				B65B5A5824F4409F00E74E73 /* AudioLabSwift */,
 				B65B5A5724F4409F00E74E73 /* Products */,
 			);
@@ -90,6 +89,7 @@
 				B65B5A5B24F4409F00E74E73 /* SceneDelegate.swift */,
 				B65B5A5D24F4409F00E74E73 /* ViewController.swift */,
 				B65B5A8024F4AAB800E74E73 /* MetalGraph.swift */,
+				B65B5A7E24F4798B00E74E73 /* Shaders.metal */,
 				B65B5A7924F4523C00E74E73 /* AudioModel.swift */,
 				B65B5A5F24F4409F00E74E73 /* Main.storyboard */,
 				B65B5A6224F440A100E74E73 /* Assets.xcassets */,
