@@ -51,15 +51,17 @@ class AudioModel {
     // MARK: Audiocard Callbacks
     // in obj-C it was (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
     // and in swift this translates to:
-    private func handleMicrophone (data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32) {
+    private func handleMicrophone (data:Optional<UnsafeMutablePointer<Float>>,
+                                   numFrames:UInt32,
+                                   numChannels: UInt32) {
         if let arrayData = data{
             // just print out the first audio sample
-            print(arrayData[0])
+            //print(arrayData[0])
             
             // bonus: vDSP example
-            //var max:Float = 0
-            //vDSP_maxv(arrayData, 1, &max,vDSP_Length(numFrames))
-            //print(max)
+            var max:Float = 0
+            vDSP_maxv(arrayData, 1, &max,vDSP_Length(numFrames))
+            print(max)
         }
         
     }
