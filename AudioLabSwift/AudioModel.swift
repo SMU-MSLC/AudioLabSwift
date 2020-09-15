@@ -70,13 +70,16 @@ class AudioModel {
     // in obj-C it was (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
     // and in swift this translates to:
     
-    private func handleSpeakerQueryWithAudioFile(data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32){
+    private func handleSpeakerQueryWithAudioFile(data:Optional<UnsafeMutablePointer<Float>>,
+                                                 numFrames:UInt32,
+                                                 numChannels: UInt32){
         if let file = self.fileReader{
             
             // read from file, loaidng into data (a float pointer)
             file.retrieveFreshAudio(data,
                                     numFrames: numFrames,
                                     numChannels: numChannels)
+            
             
             
         }
