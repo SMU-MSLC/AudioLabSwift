@@ -18,7 +18,8 @@ class AudioModel {
     // when asked for, the array will be calculated from the input buffer
     var timeData:[Float]{
         get{
-            self.inputBuffer!.fetchFreshData(&_timeData, withNumSamples: Int64(BUFFER_SIZE))
+            self.inputBuffer!.fetchFreshData(&_timeData,
+                                             withNumSamples: Int64(BUFFER_SIZE))
             return _timeData
         }
     }
