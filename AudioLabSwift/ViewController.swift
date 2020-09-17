@@ -30,9 +30,6 @@ class ViewController: UIViewController {
             shouldNormalize: false,
             numPointsInGraph: AUDIO_BUFFER_SIZE)
         
-        graph?.addGraph(withName: "sq_time",
-        shouldNormalize: false,
-        numPointsInGraph: AUDIO_BUFFER_SIZE)
         
         // start up the audio model here, querying microphone
         audio.startMicrophoneProcessing()
@@ -56,14 +53,6 @@ class ViewController: UIViewController {
             forKey: "time"
         )
         
-        var timeData = self.audio.timeData
-        
-        vDSP_vsq(timeData, 1, &timeData, 1, vDSP_Length(timeData.count))
-        
-        self.graph?.updateGraph(
-            data: timeData,
-            forKey: "sq_time"
-        )
         
     }
     
