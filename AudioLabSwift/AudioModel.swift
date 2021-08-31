@@ -64,7 +64,7 @@ class AudioModel {
             // if using swift for generating the sine wave: when changed, we need to update our increment
             //phaseIncrement = Float(2*Double.pi*sineFrequency/audioManager!.samplingRate)
             
-            // if using objective c: this changes the frequency in the novocain block
+            // if using objective c: this changes the frequency in the novocaine block
             self.audioManager?.sineFrequency = sineFrequency
         }
     }
