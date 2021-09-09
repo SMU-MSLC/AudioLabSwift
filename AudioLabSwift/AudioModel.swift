@@ -14,14 +14,14 @@ class AudioModel {
     // here we only setup the audio to read from
     
     // MARK: Properties
-    // no public prperties to interact with yet
+    // no public properties to interact with yet
 
     private var BUFFER_SIZE:Int
 
     
     // MARK: Public Methods
     init() {
-        BUFFER_SIZE = 0
+        BUFFER_SIZE = 0 // not setting up any buffers here
 
     }
     
@@ -32,7 +32,9 @@ class AudioModel {
     
     // You must call this when you want the audio to start being handled by our model
     func play(){
-        self.audioManager?.play()
+        if let manager = self.audioManager{
+            manager.play()
+        }
     }
     
     
@@ -60,12 +62,13 @@ class AudioModel {
                                    numChannels: UInt32) {
         if let arrayData = data{
             // just print out the first audio sample
-            //print(arrayData[0])
+            print(arrayData[0])
             
             // bonus: vDSP example
-            var max:Float = 0
-            vDSP_maxv(arrayData, 1, &max,vDSP_Length(numFrames))
-            print(max)
+            // here is an example using iOS accelerate to quickly handle the array
+//            var max:Float = 0
+//            vDSP_maxv(arrayData, 1, &max,vDSP_Length(numFrames))
+//            print(max)
         }
         
     }
