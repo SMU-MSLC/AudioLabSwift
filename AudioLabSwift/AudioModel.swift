@@ -10,8 +10,12 @@ import Foundation
 import Accelerate
 
 class AudioModel {
+    // this is a minimal example of the Audio Model,
+    // here we only setup the audio to read from
     
     // MARK: Properties
+    // no public prperties to interact with yet
+
     private var BUFFER_SIZE:Int
 
     

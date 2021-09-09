@@ -10,8 +10,6 @@ import UIKit
 import Metal
 
 
-
-
 class ViewController: UIViewController {
 
     
@@ -23,6 +21,7 @@ class ViewController: UIViewController {
         // just start up the audio model here
         audio.startMicrophoneProcessing()
 
+        // start doing whatever the audio model is supposed to do
         audio.play()
         
        
