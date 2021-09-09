@@ -31,7 +31,9 @@ class AudioModel {
     
     // You must call this when you want the audio to start being handled by our model
     func play(){
-        self.audioManager?.play()
+        if let manager = self.audioManager{
+            manager.play()
+        }
     }
     
     
@@ -55,7 +57,6 @@ class AudioModel {
     // in obj-C it was (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
     // and in swift this translates to:
     
-    
     //    _     _     _     _     _     _     _     _     _     _
     //   / \   / \   / \   / \   / \   / \   / \   / \   / \   /
     //  /   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/
@@ -69,6 +70,7 @@ class AudioModel {
         }
     }
     
+    // SWIFT SINE WAVE
     // everything below here is for the swift implementation
     // this can be deleted when using the objective c implementation
     private var phase:Float = 0.0
