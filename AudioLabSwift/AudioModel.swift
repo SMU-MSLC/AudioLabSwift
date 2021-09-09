@@ -22,8 +22,12 @@ class AudioModel {
     
     // public function for playing from a file reader file
     func startProcesingAudioFileForPlayback(){
-        self.audioManager?.outputBlock = self.handleSpeakerQueryWithAudioFile
-        self.fileReader?.play()
+        // set the output block to read from and play the audio file
+        if let manager = self.audioManager,
+           let fileReader = self.fileReader{
+            manager.outputBlock = self.handleSpeakerQueryWithAudioFile
+            fileReader.play()
+        }
     }
     
     
@@ -75,10 +79,11 @@ class AudioModel {
                                                  numChannels: UInt32){
         if let file = self.fileReader{
             
-            // read from file, loaidng into data (a float pointer)
+            // read from file, loading into data (a float pointer)
             file.retrieveFreshAudio(data,
                                     numFrames: numFrames,
                                     numChannels: numChannels)
+            // that is it! The file was just loaded into the data array
             
             
             
