@@ -27,7 +27,9 @@ class AudioModel {
     
     // public function for starting processing of microphone data
     func startMicrophoneProcessing(){
-        self.audioManager?.inputBlock = self.handleMicrophone
+        if let manager = self.audioManager{
+            manager.inputBlock = self.handleMicrophone
+        }
     }
     
     // You must call this when you want the audio to start being handled by our model
@@ -62,13 +64,13 @@ class AudioModel {
                                    numChannels: UInt32) {
         if let arrayData = data{
             // just print out the first audio sample
-            print(arrayData[0])
+//            print(arrayData[0])
             
             // bonus: vDSP example
             // here is an example using iOS accelerate to quickly handle the array
-//            var max:Float = 0
-//            vDSP_maxv(arrayData, 1, &max,vDSP_Length(numFrames))
-//            print(max)
+            var max:Float = 0
+            vDSP_maxv(arrayData, 1, &max, vDSP_Length(numFrames))
+            print(max)
         }
         
     }
