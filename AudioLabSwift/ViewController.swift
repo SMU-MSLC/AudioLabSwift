@@ -10,13 +10,18 @@ import UIKit
 import Metal
 import Accelerate
 
-let AUDIO_BUFFER_SIZE = 1024*4
+
 
 
 class ViewController: UIViewController {
 
+    // setup some constants we will use
+    struct AudioConstants{
+        static let AUDIO_BUFFER_SIZE = 1024*4
+    }
+    
     // setup audio model
-    let audio = AudioModel(buffer_size: AUDIO_BUFFER_SIZE)
+    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
     lazy var graph:MetalGraph? = {
         return MetalGraph(mainView: self.view)
     }()
@@ -28,7 +33,7 @@ class ViewController: UIViewController {
         // add in a graph for displaying the audio
         graph?.addGraph(withName: "time",
             shouldNormalize: false,
-            numPointsInGraph: AUDIO_BUFFER_SIZE)
+            numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
         
         
         // start up the audio model here, querying microphone
