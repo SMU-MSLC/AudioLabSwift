@@ -66,7 +66,9 @@ class AudioModel {
             //phaseIncrement = Float(2*Double.pi*sineFrequency/audioManager!.samplingRate)
             
             // if using objective c: this changes the frequency in the novocaine block
-            self.audioManager?.sineFrequency = sineFrequency
+            if let manager = self.audioManager {
+                manager.sineFrequency = sineFrequency
+            }
         }
     }
     
