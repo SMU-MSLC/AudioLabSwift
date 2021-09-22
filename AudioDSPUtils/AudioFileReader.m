@@ -107,7 +107,7 @@
         // Set a few defaults and presets
         self.samplingRate = thisSamplingRate;
         self.numChannels = thisNumChannels;
-        self.latency = .011609977; // 512 samples / ( 44100 samples / sec ) default
+        self.latency = 512.0/self.samplingRate; // 512 samples / ( 44100 samples / sec ) default
         
         
         // We're going to impose a format upon the input file
