@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     // setup audio model
     let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
     lazy var graph:MetalGraph? = {
-        return MetalGraph(mainView: self.view)
+        return MetalGraph(userView: self.view)
     }()
     
     
@@ -32,7 +32,6 @@ class ViewController: UIViewController {
         
         // add in a graph for displaying the audio
         graph?.addGraph(withName: "time",
-            shouldNormalize: false,
             numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
         
         
