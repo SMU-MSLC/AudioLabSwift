@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         if let graph = self.graph {
             graph.addGraph(withName: "time",
                            numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+            graph.makeGrids()
         }
         
         
