@@ -31,8 +31,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // add in a graph for displaying the audio
-        graph?.addGraph(withName: "time",
-            numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+        if let graph = self.graph {
+            graph.addGraph(withName: "time",
+                           numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+        }
         
         
         // start up the audio model here, querying microphone
