@@ -19,16 +19,17 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // just start up the audio model here
-        audio.startProcesingAudioFileForPlayback()
-        audio.play()
-        
        
     }
     
     
 
+    @IBAction func play(_ sender: UIButton) {
+        
+        // just start up the audio model here
+        audio.startProcesingAudioFileForPlayback()
+        audio.togglePlaying()
+    }
     
     
 

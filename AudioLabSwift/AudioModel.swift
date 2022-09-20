@@ -12,6 +12,7 @@ import Accelerate
 class AudioModel {
     
     // MARK: Properties
+    var isPlaying = false
     private var BUFFER_SIZE:Int
     
     // MARK: Public Methods
@@ -34,7 +35,21 @@ class AudioModel {
     // You must call this when you want the audio to start being handled by our model
     func play(){
         self.audioManager?.play()
+        self.isPlaying = true
     }
+    
+    func togglePlaying(){
+        if self.isPlaying{
+            self.audioManager?.pause()
+            self.isPlaying = false
+        }else{
+            self.audioManager?.play()
+            self.isPlaying = true
+        }
+    }
+    
+    
+
     
     
     //==========================================
