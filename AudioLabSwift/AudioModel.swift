@@ -28,6 +28,7 @@ class AudioModel {
     // public function for starting processing of microphone data
     func startMicrophoneProcessing(){
         if let manager = self.audioManager{
+            // this sets the input block whenever the manager is played
             manager.inputBlock = self.handleMicrophone
         }
     }
@@ -43,7 +44,7 @@ class AudioModel {
     //==========================================
     // MARK: Private Properties
     private lazy var audioManager:Novocaine? = {
-        return Novocaine.audioManager()
+        return Novocaine.audioManager() // alloc and init Novocaine
     }()
     
     
@@ -66,8 +67,9 @@ class AudioModel {
             // just print out the first audio sample
 //            print(arrayData[0])
             
-            // bonus: vDSP example
+            // bonus: vDSP example (will cover in next lecture)
             // here is an example using iOS accelerate to quickly handle the array
+            // Let's use the accelerate framework
             var max:Float = 0
             vDSP_maxv(arrayData, 1, &max, vDSP_Length(numFrames))
             print(max)
