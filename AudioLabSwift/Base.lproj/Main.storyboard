@@ -25,18 +25,27 @@
                                     <action selector="play:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fgl-mp-QvR"/>
                                 </connections>
                             </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="csQ-Rv-RNW">
+                                <rect key="frame" x="18" y="481" width="378" height="31"/>
+                                <connections>
+                                    <action selector="volumeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="DvH-y6-gXy"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="1iI-An-r0u" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5bG-v4-TnX"/>
+                            <constraint firstItem="csQ-Rv-RNW" firstAttribute="top" secondItem="1iI-An-r0u" secondAttribute="bottom" constant="17.5" id="Ibb-8N-Y1P"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="csQ-Rv-RNW" secondAttribute="trailing" constant="20" id="Y7s-3n-roX"/>
+                            <constraint firstItem="csQ-Rv-RNW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="hra-kz-hSs"/>
                             <constraint firstItem="1iI-An-r0u" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="oWi-MM-EmF"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="86"/>
+            <point key="canvasLocation" x="137.68115942028987" y="85.714285714285708"/>
         </scene>
     </scenes>
     <resources>

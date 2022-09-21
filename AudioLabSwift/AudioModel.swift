@@ -13,6 +13,7 @@ class AudioModel {
     
     // MARK: Properties
     var isPlaying = false
+    var volume:Float = 1.0
     private var BUFFER_SIZE:Int
     
     // MARK: Public Methods
@@ -48,6 +49,9 @@ class AudioModel {
         }
     }
     
+    func setVolume(val:Float){
+        self.volume = val
+    }
     
 
     
@@ -95,10 +99,15 @@ class AudioModel {
         if let file = self.fileReader{
             
             // read from file, loading into data (a float pointer)
-            file.retrieveFreshAudio(data,
-                                    numFrames: numFrames,
-                                    numChannels: numChannels)
-            // that is it! The file was just loaded into the data array
+            if let arrayData = data{
+                
+                file.retrieveFreshAudio(arrayData,
+                                        numFrames: numFrames,
+                                        numChannels: numChannels)
+                
+                vDSP_vsmul(arrayData, 1, &(self.volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
+                // that is it! The file was just loaded into the data array
+            }
             
             
             

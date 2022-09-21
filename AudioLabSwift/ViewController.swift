@@ -32,6 +32,9 @@ class ViewController: UIViewController {
     }
     
     
-
+    @IBAction func volumeChanged(_ sender: UISlider) {
+        audio.setVolume(val: sender.value)
+    }
+    
 }
 
