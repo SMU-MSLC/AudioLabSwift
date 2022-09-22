@@ -13,6 +13,7 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
+    private let USE_C_SINE = true
     
     // MARK: Public Methods
     init() {
@@ -25,8 +26,18 @@ class AudioModel {
         // Two examples are given that use either objective c or that use swift
         //   the swift code for loop is slightly slower thatn doing this in c,
         //   but the implementations are very similar
-        //self.audioManager?.outputBlock = self.handleSpeakerQueryWithSinusoid // swift for loop
-        self.audioManager?.setOutputBlockToPlaySineWave(sineFrequency) // c for loop
+        if let manager = self.audioManager{
+            
+            if USE_C_SINE {
+                // c for loop
+                manager.setOutputBlockToPlaySineWave(sineFrequency)
+            }else{
+                // swift for loop
+                manager.outputBlock = self.handleSpeakerQueryWithSinusoid
+            }
+            
+            
+        }
     }
     
     // You must call this when you want the audio to start being handled by our model
@@ -62,12 +73,16 @@ class AudioModel {
     //  /   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/
     var sineFrequency:Float = 0.0 { // frequency in Hz (changeable by user)
         didSet{
-            // if using swift for generating the sine wave: when changed, we need to update our increment
-            //phaseIncrement = Float(2*Double.pi*sineFrequency/audioManager!.samplingRate)
             
-            // if using objective c: this changes the frequency in the novocaine block
             if let manager = self.audioManager {
-                manager.sineFrequency = sineFrequency
+                if USE_C_SINE {
+                    // if using objective c: this changes the frequency in the novocaine block
+                    manager.sineFrequency = sineFrequency
+                    
+                }else{
+                    // if using swift for generating the sine wave: when changed, we need to update our increment
+                    phaseIncrement = Float(2*Double.pi*Double(sineFrequency)/manager.samplingRate)
+                }
             }
         }
     }

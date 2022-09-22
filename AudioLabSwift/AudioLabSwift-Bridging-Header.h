@@ -2,7 +2,7 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-#import "Novocaine.h"
-#import "AudioFileReader.h"
-#import "CircularBuffer.h"
-#import "FFTHelper.h"
+#import "Utility/Novocaine.h"
+#import "Utility/AudioFileReader.h"
+#import "Utility/CircularBuffer.h"
+#import "Utility/FFTHelper.h"
