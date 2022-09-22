@@ -12,7 +12,6 @@ import Accelerate
 class AudioModel {
     
     // MARK: Properties
-    var isPlaying = false
     var volume:Float = 1.0
     private var BUFFER_SIZE:Int
     
@@ -35,17 +34,18 @@ class AudioModel {
     
     // You must call this when you want the audio to start being handled by our model
     func play(){
-        self.audioManager?.play()
-        self.isPlaying = true
+        if let manager = self.audioManager{
+            manager.play()
+        }
     }
     
     func togglePlaying(){
-        if self.isPlaying{
-            self.audioManager?.pause()
-            self.isPlaying = false
-        }else{
-            self.audioManager?.play()
-            self.isPlaying = true
+        if let manager = self.audioManager{
+            if manager.playing{
+                manager.pause()
+            }else{
+                manager.play()
+            }
         }
     }
     
@@ -100,13 +100,15 @@ class AudioModel {
             
             // read from file, loading into data (a float pointer)
             if let arrayData = data{
-                
+                // get samples from audio file
                 file.retrieveFreshAudio(arrayData,
                                         numFrames: numFrames,
                                         numChannels: numChannels)
-                
-                vDSP_vsmul(arrayData, 1, &(self.volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
                 // that is it! The file was just loaded into the data array
+                
+                // adjust volume of audio file output
+                vDSP_vsmul(arrayData, 1, &(self.volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
+                
             }
             
             

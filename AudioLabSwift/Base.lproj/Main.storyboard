@@ -18,9 +18,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1iI-An-r0u">
-                                <rect key="frame" x="181.5" y="432.5" width="51" height="31"/>
+                                <rect key="frame" x="185" y="432.5" width="44" height="31"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Play"/>
+                                <buttonConfiguration key="configuration" style="gray" title="⏯"/>
                                 <connections>
                                     <action selector="play:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fgl-mp-QvR"/>
                                 </connections>
