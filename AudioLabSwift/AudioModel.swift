@@ -13,7 +13,7 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
-    private let USE_C_SINE = true
+    private let USE_C_SINE = false
     
     // MARK: Public Methods
     init() {
