@@ -35,10 +35,14 @@ class ViewController: UIViewController {
             shouldNormalize: false,
             numPointsInGraph: AUDIO_BUFFER_SIZE)
         
+        graph?.addGraph(withName: "twenty",
+                        shouldNormalize: true,
+                        numPointsInGraph: 20)
+        
         // just start up the audio model here
         audio.startMicrophoneProcessing(withFps: 10)
-        //audio.startProcesingAudioFileForPlayback()
-        audio.startProcessingSinewaveForPlayback(withFreq: 630.0)
+        audio.startProcesingAudioFileForPlayback()
+        //audio.startProcessingSinewaveForPlayback(withFreq: 630.0)
         audio.play()
         
         // run the loop for updating the graph peridocially
@@ -48,6 +52,14 @@ class ViewController: UIViewController {
             repeats: true)
        
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        audio.pause()
+    }
+      
+        
+    
     
     
     @objc
@@ -62,6 +74,10 @@ class ViewController: UIViewController {
             forKey: "time"
         )
         
+        self.graph?.updateGraph(
+            data: self.audio.twentyPoints,
+            forKey: "twenty"
+        )
     }
     
     

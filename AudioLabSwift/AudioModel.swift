@@ -13,15 +13,19 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
+    private var batch_size:Int
     var timeData:[Float]
     var fftData:[Float]
+    var twentyPoints:[Float]
     
     // MARK: Public Methods
     init(buffer_size:Int) {
         BUFFER_SIZE = buffer_size
+        batch_size = BUFFER_SIZE/40 //FFT size is BUFFER_SIZE/2, and 1/20 of FFT size would be 1/40 of BUFFER_SIZE
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
+        twentyPoints = Array.init(repeating:0.0, count: 20)
     }
     
     // public function for starting processing of microphone data
@@ -50,9 +54,18 @@ class AudioModel {
         self.audioManager?.setOutputBlockToPlaySineWave(sineFrequency) // c for loop
     }
     
+    
+    // public function for playing from a saved audio
+    
+    
     // You must call this when you want the audio to start being handled by our model
     func play(){
         self.audioManager?.play()
+    }
+    
+    // call this when you want to pause the audio 
+    func pause(){
+        self.audioManager?.pause()
     }
     
     // Here is an example function for getting the maximum frequency
@@ -95,7 +108,6 @@ class AudioModel {
                                    andBufferSize: Int64(BUFFER_SIZE))
     }()
     
-    
     //==========================================
     // MARK: Private Methods
     private lazy var fileReader:AudioFileReader? = {
@@ -125,6 +137,19 @@ class AudioModel {
             // now take FFT and display it
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
+            
+            //vDSP_maxv(twentyPoints, batch_size, &fftData, vDSP_Length(BUFFER_SIZE/2))
+            for i in 0...19 { //loop to calculate the maximum of every batch in fftData
+                var c: Float = .nan
+                var a = [Float](repeating: 0.0, count: batch_size)
+                for j in 0...batch_size-1 {
+                    let count = i*batch_size+j
+                    a[j] = fftData[count]
+                }
+                vDSP_maxv(a, 1, &c, vDSP_Length(batch_size))
+                //print(c)
+                twentyPoints[i] = c-90 //-90 to make the data display on screen
+            }
             
             
         }
