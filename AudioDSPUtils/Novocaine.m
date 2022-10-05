@@ -277,7 +277,6 @@ static pthread_mutex_t outputAudioFileLock;
     // ---------------------------
     // Initialize the audio session
     AVAudioSession *session = [AVAudioSession sharedInstance];
-    
     // configure session to be input from microphone only, other options include: AVAudioSessionCategoryPlayAndRecord, AVAudioSessionCategoryAudioProcessing, AVAudioSessionCategoryRecord but Record is ideal for our application because we are doing "online" processing
     if(![session setCategory:AVAudioSessionCategoryPlayAndRecord
                        error:&error])

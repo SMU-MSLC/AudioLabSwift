@@ -8,6 +8,7 @@
 
 import Foundation
 import Accelerate
+import Algorithms
 
 class AudioModel {
     
@@ -15,6 +16,9 @@ class AudioModel {
     private var BUFFER_SIZE:Int
     var timeData:[Float]
     var fftData:[Float]
+    private var maxVals:[Float]
+    private var maxFreqsi:[Int]
+    var maxFreqs:[Float]
     
     // MARK: Public Methods
     init(buffer_size:Int) {
@@ -22,6 +26,9 @@ class AudioModel {
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
+        maxVals = Array.init(repeating: 0.0, count: 2)
+        maxFreqsi = Array.init(repeating: 0, count: 2)
+        maxFreqs = Array.init(repeating: 0.0, count: 2)
     }
     
     // public function for starting processing of microphone data
@@ -56,22 +63,24 @@ class AudioModel {
     }
     
     // Here is an example function for getting the maximum frequency
-    func getMaxFrequencyMagnitude() -> (Float,Float){
+    func getMaxFrequencyMagnitude(toIgnore: Int) -> (Int, Float){
         // this is the slow way of getting the maximum...
         // you might look into the Accelerate framework to make things more efficient
         var max:Float = -1000.0
         var maxi:Int = 0
-        
+        print(toIgnore)
         if inputBuffer != nil {
             for i in 0..<Int(fftData.count){
-                if(fftData[i]>max){
-                    max = fftData[i]
-                    maxi = i
+                if(i != toIgnore) {
+                    if(fftData[i]>max){
+                        max = fftData[i]
+                        maxi = i
+                    }
                 }
             }
         }
         let frequency = Float(maxi) / Float(BUFFER_SIZE) * Float(self.audioManager!.samplingRate)
-        return (max,frequency)
+        return (maxi, frequency)
     }
     // for sliding max windows, you might be interested in the following: vDSP_vswmax
     
@@ -121,12 +130,27 @@ class AudioModel {
         if inputBuffer != nil {
             // copy data to swift array
             self.inputBuffer!.fetchFreshData(&timeData, withNumSamples: Int64(BUFFER_SIZE))
-            
+       
             // now take FFT and display it
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
             
+//            maxVals = fftData.max(count: 2, sortedBy: >)
+//            for i in 0..<Int(fftData.count) {
+//                if(fftData[i] == maxVals[0]) {
+//                    maxFreqsi[0] = i
+//                } else if(fftData[i] == maxVals[1]) {
+//                    maxFreqsi[1] = i
+//                }
+//            }
             
+//            maxFreqs[0] = Float(maxFreqsi[0]) / Float(BUFFER_SIZE) * Float(self.audioManager!.samplingRate)
+//            maxFreqs[1] = Float(maxFreqsi[1]) / Float(BUFFER_SIZE) * Float(self.audioManager!.samplingRate)
+            var result = getMaxFrequencyMagnitude(toIgnore: -1)
+            maxFreqs[0] = result.1 * 2
+            var result1 = getMaxFrequencyMagnitude(toIgnore: result.0)
+            maxFreqs[1] = result1.1 * 2
+            print(maxFreqs)
         }
     }
     

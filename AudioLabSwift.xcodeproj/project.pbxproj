@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		017C454A28EE066A005D3962 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 017C454928EE066A005D3962 /* Algorithms */; };
+		01897B8628EE1865009161C0 /* AnalyzerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01897B8528EE1865009161C0 /* AnalyzerModel.swift */; };
 		B65B5A5A24F4409F00E74E73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B5A5924F4409F00E74E73 /* AppDelegate.swift */; };
 		B65B5A5C24F4409F00E74E73 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B5A5B24F4409F00E74E73 /* SceneDelegate.swift */; };
 		B65B5A5E24F4409F00E74E73 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B5A5D24F4409F00E74E73 /* ViewController.swift */; };
@@ -24,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01897B8528EE1865009161C0 /* AnalyzerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzerModel.swift; sourceTree = "<group>"; };
 		B65B5A5624F4409F00E74E73 /* AudioLabSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioLabSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B65B5A5924F4409F00E74E73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B65B5A5B24F4409F00E74E73 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -52,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				017C454A28EE066A005D3962 /* Algorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +85,7 @@
 				B65B5A6E24F440D600E74E73 /* Novocaine.h */,
 				B65B5A6F24F440D600E74E73 /* Novocaine.m */,
 				B65B5A7724F444CE00E74E73 /* CircularBuffer.h */,
+				01897B8528EE1865009161C0 /* AnalyzerModel.swift */,
 				B65B5A7624F444CE00E74E73 /* CircularBuffer.m */,
 				B65B5A7224F443A400E74E73 /* AudioFileReader.h */,
 				B65B5A7124F443A400E74E73 /* AudioFileReader.m */,
@@ -117,6 +122,9 @@
 			dependencies = (
 			);
 			name = AudioLabSwift;
+			packageProductDependencies = (
+				017C454928EE066A005D3962 /* Algorithms */,
+			);
 			productName = AudioLabSwift;
 			productReference = B65B5A5624F4409F00E74E73 /* AudioLabSwift.app */;
 			productType = "com.apple.product-type.application";
@@ -146,6 +154,9 @@
 				Base,
 			);
 			mainGroup = B65B5A4D24F4409F00E74E73;
+			packageReferences = (
+				017C454828EE0669005D3962 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+			);
 			productRefGroup = B65B5A5724F4409F00E74E73 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -175,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B65B5A7A24F4523C00E74E73 /* AudioModel.swift in Sources */,
+				01897B8628EE1865009161C0 /* AnalyzerModel.swift in Sources */,
 				B65B5A7824F444CE00E74E73 /* CircularBuffer.m in Sources */,
 				B65B5A7324F443A400E74E73 /* AudioFileReader.m in Sources */,
 				B65B5A7024F440D600E74E73 /* Novocaine.m in Sources */,
@@ -329,7 +341,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD62CDC25;
+				DEVELOPMENT_TEAM = F69WJ27LN4;
 				INFOPLIST_FILE = AudioLabSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -351,7 +363,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD62CDC25;
+				DEVELOPMENT_TEAM = F69WJ27LN4;
 				INFOPLIST_FILE = AudioLabSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -388,6 +400,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		017C454828EE0669005D3962 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		017C454928EE066A005D3962 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 017C454828EE0669005D3962 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B65B5A4E24F4409F00E74E73 /* Project object */;
 }
