@@ -57,7 +57,7 @@ class AnalyzerModel {
             data: self.audio.fftData,
             forKey: "fft"
         )
-        
+
         self.graph?.updateGraph(
             data: self.audio.timeData,
             forKey: "time"
