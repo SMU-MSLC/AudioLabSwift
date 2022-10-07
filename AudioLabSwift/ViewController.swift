@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     lazy var analyzer:AnalyzerModel = {
         return AnalyzerModel(viewGraph: graph)
     }()
+    let arr = Array(1...100)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,8 @@ class ViewController: UIViewController {
             numPointsInGraph: AUDIO_BUFFER_SIZE)
         
         analyzer.start()
+        let arr2 = arr[0...49]
+        print(arr2)
         
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.getMaxes), userInfo: nil, repeats: true)
        
