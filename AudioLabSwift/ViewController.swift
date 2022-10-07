@@ -49,8 +49,8 @@ class ViewController: UIViewController {
     @objc
     func getMaxes() {
         let maxFreqs = self.analyzer.getMaxes()
-        max1.text = String(maxFreqs[0])
-        max2.text = String(maxFreqs[1])
+        max1.text = String(maxFreqs[0]) + " Hz"
+        max2.text = String(maxFreqs[1]) + " Hz"
     }
     
     @IBOutlet weak var max1: UILabel!
