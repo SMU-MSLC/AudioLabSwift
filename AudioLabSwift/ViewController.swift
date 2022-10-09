@@ -38,7 +38,7 @@ class ViewController: UIViewController {
         
 
         
-        // just start up the audio model here
+        // start up the audio model 
         audio.startMicrophoneProcessing(withFps: 10)
         //audio.startProcesingAudioFileForPlayback()
         audio.startProcessingSinewaveForPlayback(withFreq: 200)
@@ -82,7 +82,7 @@ class ViewController: UIViewController {
     }
     
     @objc
-    func updateFreq(){
+    func updateFreq(){ //update the text labels
         ToneOne.text = String(self.audio.twoFreq[0])
         ToneTwo.text = String(self.audio.twoFreq[1])
     }

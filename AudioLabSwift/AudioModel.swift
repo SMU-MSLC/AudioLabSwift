@@ -142,7 +142,7 @@ class AudioModel {
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
             
-            localPeakFinding(windowSize: 50)
+            localPeakFinding(windowSize: 50) //before knowing what the frequency is, i have put the default window size to 50, and it should vary based on the total frequency there is. Besides that, the output/result of this function are two Integers representing the Indices of the two LOUDEST tones located on the FFT's frequency axis
             
         }
     }
@@ -193,17 +193,6 @@ class AudioModel {
     // in obj-C it was (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
     // and in swift this translates to:
     private func handleMicrophone (data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32) {
-//        var max:Float = 0.0
-//        if let arrayData = data{
-//            for i in 0..<Int(numFrames){
-//                if(abs(arrayData[i])>max){
-//                    max = abs(arrayData[i])
-//                }
-//            }
-//        }
-//        // can this max operation be made faster??
-//        print(max)
-        
         // copy samples from the microphone into circular buffer
         self.inputBuffer?.addNewFloatData(data, withNumSamples: Int64(numFrames))
     }
