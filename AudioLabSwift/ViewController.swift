@@ -18,6 +18,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var ToneOne: UILabel!
     @IBOutlet weak var ToneTwo: UILabel!
+    @IBOutlet weak var Interval: UILabel!
     
     let audio = AudioModel(buffer_size: AUDIO_BUFFER_SIZE)
     lazy var graph:MetalGraph? = {
@@ -85,6 +86,7 @@ class ViewController: UIViewController {
     func updateFreq(){ //update the text labels
         ToneOne.text = String(self.audio.twoFreq[0])
         ToneTwo.text = String(self.audio.twoFreq[1])
+        Interval.text = String(self.audio.intervalFreq)
     }
     
 

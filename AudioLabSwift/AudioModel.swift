@@ -13,22 +13,20 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
-    private var batch_size:Int
-    //private var Fs:Int
+    var intervalFreq:Float //Hz every index
     var timeData:[Float]
     var fftData:[Float]
-    var twoFreq:[Int]
+    var twoFreq:[Float]
     
     // MARK: Public Methods
     init(buffer_size:Int) {
         
         BUFFER_SIZE = buffer_size
-        batch_size = BUFFER_SIZE/40 //FFT size is BUFFER_SIZE/2, and 1/20 of FFT size would be 1/40 of BUFFER_SIZE
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
-        twoFreq = Array.init(repeating:0, count:2) //to record the two loudest tones
-        
+        twoFreq = Array.init(repeating:0.0, count:2) //to record the two loudest tones
+        intervalFreq = 44100.0/Float(BUFFER_SIZE)
     }
     
     // public function for starting processing of microphone data
@@ -142,7 +140,7 @@ class AudioModel {
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
             
-            localPeakFinding(windowSize: 50) //before knowing what the frequency is, i have put the default window size to 50, and it should vary based on the total frequency there is. Besides that, the output/result of this function are two Integers representing the Indices of the two LOUDEST tones located on the FFT's frequency axis
+            localPeakFinding(windowSize: 5) //before knowing what the frequency is, i have put the default window size to 50, and it should vary based on the total frequency there is. Besides that, the output/result of this function are two Integers representing the Indices of the two LOUDEST tones located on the FFT's frequency axis
             
         }
     }
@@ -172,13 +170,11 @@ class AudioModel {
         let sortedOutput = output.sorted { (lhs, rhs) in
             return lhs.1 > rhs.1
         }
-        print("found local max at")
         if (sortedOutput.count > 1){
             //using the current window size, display the position of top two tones in the FFT buffer
-            //print(sortedOutput[0])
-            twoFreq[0] = sortedOutput[0].0
-            //print(sortedOutput[1])
-            twoFreq[1] = sortedOutput[1].0 //update the array passing as an output
+            //calculate the frequency based on the max
+            twoFreq[0] = Float(sortedOutput[0].0) * intervalFreq
+            twoFreq[1] = Float(sortedOutput[1].0) * intervalFreq //update the array passing as an output
         }
         
         
