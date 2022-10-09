@@ -14,18 +14,21 @@ class AudioModel {
     // MARK: Properties
     private var BUFFER_SIZE:Int
     private var batch_size:Int
+    //private var Fs:Int
     var timeData:[Float]
     var fftData:[Float]
-    var twentyPoints:[Float]
+    var twoFreq:[Int]
     
     // MARK: Public Methods
     init(buffer_size:Int) {
+        
         BUFFER_SIZE = buffer_size
         batch_size = BUFFER_SIZE/40 //FFT size is BUFFER_SIZE/2, and 1/20 of FFT size would be 1/40 of BUFFER_SIZE
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
-        twentyPoints = Array.init(repeating:0.0, count: 20)
+        twoFreq = Array.init(repeating:0, count:2) //to record the two loudest tones
+        
     }
     
     // public function for starting processing of microphone data
@@ -61,6 +64,7 @@ class AudioModel {
     // You must call this when you want the audio to start being handled by our model
     func play(){
         self.audioManager?.play()
+        
     }
     
     // call this when you want to pause the audio 
@@ -138,21 +142,48 @@ class AudioModel {
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
             
-            //vDSP_maxv(twentyPoints, batch_size, &fftData, vDSP_Length(BUFFER_SIZE/2))
-            for i in 0...19 { //loop to calculate the maximum of every batch in fftData
-                var c: Float = .nan
-                var a = [Float](repeating: 0.0, count: batch_size)
-                for j in 0...batch_size-1 {
-                    let count = i*batch_size+j
-                    a[j] = fftData[count]
-                }
-                vDSP_maxv(a, 1, &c, vDSP_Length(batch_size))
-                //print(c)
-                twentyPoints[i] = c-90 //-90 to make the data display on screen
-            }
-            
+            localPeakFinding(windowSize: 50)
             
         }
+    }
+    
+    // local peak finding
+    private func localPeakFinding (windowSize:Int=50){
+        
+        let windowCount = BUFFER_SIZE/2 - windowSize  //calculate how many times the calculation will happen
+        var output = [(Int, Float)]()
+        
+        for i in 0...windowCount-1 {//for this many iterations to find the local max
+            
+            var c: Float = .nan
+            var a = [Float](repeating: 0.0, count: windowSize)
+            var index: vDSP_Length = 0
+            for j in 0...windowSize-1{//find the max in the range of (windowSize) amount
+                a[j] = fftData[i+j]
+            }
+            vDSP_maxvi(a, 1, &c, &index, vDSP_Length(windowSize))
+            if (index == windowSize/2){//if index sits in the middle
+                //print("found local max at")
+                let currIndex = Int(index) + i //find the current index
+                output.append((currIndex, fftData[currIndex]))
+                //print(currIndex)
+            }
+        }
+        let sortedOutput = output.sorted { (lhs, rhs) in
+            return lhs.1 > rhs.1
+        }
+        print("found local max at")
+        if (sortedOutput.count > 1){
+            //using the current window size, display the position of top two tones in the FFT buffer
+            //print(sortedOutput[0])
+            twoFreq[0] = sortedOutput[0].0
+            //print(sortedOutput[1])
+            twoFreq[1] = sortedOutput[1].0 //update the array passing as an output
+        }
+        
+        
+        
+        
     }
     
    
