@@ -47,7 +47,7 @@ class ViewController: UIViewController {
         audio.play()
         
         // run the loop for updating the graph peridocially
-        Timer.scheduledTimer(timeInterval: 0.05, target: self,
+        Timer.scheduledTimer(timeInterval: 0.02, target: self,
             selector: #selector(self.updateGraph),
             userInfo: nil,
             repeats: true)

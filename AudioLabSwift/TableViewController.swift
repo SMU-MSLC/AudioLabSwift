@@ -22,7 +22,7 @@ class TableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -32,13 +32,16 @@ class TableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AudioLab", for: indexPath)
-        cell.textLabel?.text = "AudioLab"
-        return cell
-    
-
-        
+        if indexPath.section == 0{
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Module A", for: indexPath)
+            cell.textLabel?.text = "Module A"
+            return cell
+        }
+        else{
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Module B", for: indexPath)
+            cell.textLabel?.text = "Module B"
+            return cell
+        }
     }
     
 

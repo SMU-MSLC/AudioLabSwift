@@ -13,20 +13,26 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
+    var motionStat:Int //to reflect the current motion
     var intervalFreq:Float //Hz every index
     var timeData:[Float]
     var fftData:[Float]
     var twoFreq:[Float]
     
+
+    
+    
     // MARK: Public Methods
     init(buffer_size:Int) {
         
         BUFFER_SIZE = buffer_size
+        intervalFreq = 40000/Float(BUFFER_SIZE)
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
         twoFreq = Array.init(repeating:0.0, count:2) //to record the two loudest tones
-        intervalFreq = 44100.0/Float(BUFFER_SIZE)
+        
+        motionStat = 0 
     }
     
     // public function for starting processing of microphone data
@@ -38,6 +44,7 @@ class AudioModel {
                             selector: #selector(self.runEveryInterval),
                             userInfo: nil,
                             repeats: true)
+        
     }
     
     // public function for playing from a file reader file
@@ -70,22 +77,21 @@ class AudioModel {
         self.audioManager?.pause()
     }
     
+    // call this when you want to end/reset the audio
+    func tearDown(){
+        self.audioManager?.teardownAudio()
+    }
+    
     // Here is an example function for getting the maximum frequency
     func getMaxFrequencyMagnitude() -> (Float,Float){
         // this is the slow way of getting the maximum...
         // you might look into the Accelerate framework to make things more efficient
-        var max:Float = -1000.0
-        var maxi:Int = 0
         
-        if inputBuffer != nil {
-            for i in 0..<Int(fftData.count){
-                if(fftData[i]>max){
-                    max = fftData[i]
-                    maxi = i
-                }
-            }
-        }
+        var max: Float = .nan
+        var maxi: vDSP_Length = 0
+        vDSP_maxvi(fftData, 1, &max, &maxi, vDSP_Length(fftData.count))
         let frequency = Float(maxi) / Float(BUFFER_SIZE) * Float(self.audioManager!.samplingRate)
+        print(frequency)
         return (max,frequency)
     }
     // for sliding max windows, you might be interested in the following: vDSP_vswmax
@@ -140,6 +146,9 @@ class AudioModel {
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
             
+            let max_freq = getMaxFrequencyMagnitude().1
+            intervalFreq = max_freq/Float(BUFFER_SIZE/2)
+            
             localPeakFinding(windowSize: 5) //before knowing what the frequency is, i have put the default window size to 50, and it should vary based on the total frequency there is. Besides that, the output/result of this function are two Integers representing the Indices of the two LOUDEST tones located on the FFT's frequency axis
             
         }
@@ -176,12 +185,34 @@ class AudioModel {
             twoFreq[0] = Float(sortedOutput[0].0) * intervalFreq
             twoFreq[1] = Float(sortedOutput[1].0) * intervalFreq //update the array passing as an output
         }
-        
-        
-        
-        
     }
     
+    func calculateMotion(currFreq:Float) -> (Float){
+        if (fftData[0] == 0.1){ //todo: currently intentionally disabled due to a bug that line 198 would have a buffer overflow ( sampleSize exceeds bufferSize)
+            let freqIndex = currFreq/intervalFreq //calculate the location of the interval in buffer
+            let sampleSize = Int(freqIndex/250) //calculate the sample size will help finding the average value on the left & right side of the current frequency
+            
+            //print("sampleSize is " + String(sampleSize) + " freqIndex is " + String(freqIndex))
+            //to figure out if object is close to the microphone, will need to check the left&right of freq 20k on the FFT
+            var lhsData = Array.init(repeating: Float(0), count: sampleSize+1)
+            var rhsData = Array.init(repeating: Float(0), count: sampleSize+1)
+            for i in 0...sampleSize{
+                lhsData[i] = fftData[Int(freqIndex) - sampleSize + i]
+                rhsData[i] = fftData[Int(freqIndex) + i]
+            }
+            let stride = vDSP_Stride(1)
+            var lhsMean: Float = .nan
+            var rhsMean: Float = .nan
+            //taking average of the two sets of data
+            vDSP_meanv(lhsData, stride, &lhsMean, vDSP_Length(lhsData.count))
+            vDSP_meanv(rhsData, stride, &rhsMean, vDSP_Length(rhsData.count))
+            return rhsMean - lhsMean
+        }
+        return 0
+    }
+    
+    
+    //looking for the changes around 20kHz to detect if an object is moving
    
     
     //==========================================
