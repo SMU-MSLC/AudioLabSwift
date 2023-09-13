@@ -66,16 +66,16 @@ class AudioModel {
         if let arrayData = data{
             //---------------------------------------
             // just print out the first audio sample
-            print(arrayData[0])
+            //print(arrayData[0])
             // 🎙️ -> 📉 grab first element in the buffer
             
             //---------------------------------------
             // bonus: vDSP example (will cover in next lecture)
             // here is an example using iOS accelerate to quickly handle the array
             // Let's use the accelerate framework
-//            var max:Float = 0
-//            vDSP_maxv(arrayData, 1, &max, vDSP_Length(numFrames))
-//            print(max)
+            var max:Float = 0
+            vDSP_maxv(arrayData, 1, &max, vDSP_Length(numFrames))
+            print(max)
             
             // 🎙️ -> 📉 get max element in the buffer
         }
