@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1iI-An-r0u">
-                                <rect key="frame" x="185" y="432.5" width="44" height="31"/>
+                                <rect key="frame" x="183.5" y="431" width="47" height="34.5"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="⏯"/>
                                 <connections>
@@ -26,11 +26,17 @@
                                 </connections>
                             </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="csQ-Rv-RNW">
-                                <rect key="frame" x="18" y="481" width="378" height="31"/>
+                                <rect key="frame" x="18" y="483" width="378" height="31"/>
                                 <connections>
                                     <action selector="volumeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="DvH-y6-gXy"/>
                                 </connections>
                             </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Volume: Min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ADv-2n-mDp">
+                                <rect key="frame" x="160" y="521" width="94" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -38,10 +44,15 @@
                             <constraint firstItem="1iI-An-r0u" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5bG-v4-TnX"/>
                             <constraint firstItem="csQ-Rv-RNW" firstAttribute="top" secondItem="1iI-An-r0u" secondAttribute="bottom" constant="17.5" id="Ibb-8N-Y1P"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="csQ-Rv-RNW" secondAttribute="trailing" constant="20" id="Y7s-3n-roX"/>
+                            <constraint firstItem="ADv-2n-mDp" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="bYU-cy-Kkd"/>
+                            <constraint firstItem="ADv-2n-mDp" firstAttribute="top" secondItem="csQ-Rv-RNW" secondAttribute="bottom" constant="8" symbolic="YES" id="hn9-ba-X1f"/>
                             <constraint firstItem="csQ-Rv-RNW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="hra-kz-hSs"/>
                             <constraint firstItem="1iI-An-r0u" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="oWi-MM-EmF"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="volumeLabel" destination="ADv-2n-mDp" id="81D-Fd-giA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

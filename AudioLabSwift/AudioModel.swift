@@ -12,7 +12,6 @@ import Accelerate
 class AudioModel {
     
     // MARK: Properties
-    var volume:Float = 1.0
     private var BUFFER_SIZE:Int
     
     // MARK: Public Methods
@@ -21,17 +20,6 @@ class AudioModel {
 
     }
     
-    // public function for playing from a file reader file
-    func startProcesingAudioFileForPlayback(){
-        // set the output block to read from and play the audio file
-        if let manager = self.audioManager,
-           let fileReader = self.fileReader{
-            manager.outputBlock = self.handleSpeakerQueryWithAudioFile
-            fileReader.play()
-        }
-    }
-    
-    
     // You must call this when you want the audio to start being handled by our model
     func play(){
         if let manager = self.audioManager{
@@ -39,12 +27,15 @@ class AudioModel {
         }
     }
     
+    
     func togglePlaying(){
-        if let manager = self.audioManager{
+        if let manager = self.audioManager, let reader=self.fileReader{
             if manager.playing{
-                manager.pause()
+                manager.pause() // pause audio processing
+                reader.pause() // stop buffering the song file
             }else{
-                manager.play()
+                manager.play() // start both again!
+                reader.play()
             }
         }
     }
@@ -53,11 +44,26 @@ class AudioModel {
         self.volume = val
     }
     
+    // public function for playing from a file reader file
+    func startProcesingAudioFileForPlayback(){
+        // set the output block to read from and play the audio file
+        if let manager = self.audioManager,
+           let fileReader = self.fileReader{
+            manager.outputBlock = self.handleSpeakerQueryWithAudioFile
+            fileReader.play() // tell file Reader to start filling its buffer
+        }
+    }
+    //MARK: File Reader object has three functions that we will use:
+    //      init(), find the audio file and make sure we can see it
+    //      play(), go to the file and start decoding samples
+    //      retrieveFreshAudio(...), load new samples buffer by buffer into an array
 
-    
     
     //==========================================
     // MARK: Private Properties
+    
+    private var volume:Float = 1.0 // internal storage for volume
+    
     private lazy var audioManager:Novocaine? = {
         return Novocaine.audioManager()
     }()
@@ -67,13 +73,17 @@ class AudioModel {
     //==========================================
     // MARK: Private Methods
     private lazy var fileReader:AudioFileReader? = {
-        
+        // find song in the main Bundle
         if let url = Bundle.main.url(forResource: "satisfaction", withExtension: "mp3"){
+            // if we could find the url for the song in main bundle, setup file reader
+            // the file reader is doing a lot here becasue its a decoder
+            // so when it decodes the compressed mp3, it needs to know how many samples
+            // the speaker is expecting and how many output channels the speaker has (mono, left/right, surround, etc.)
             var tmpFileReader:AudioFileReader? = AudioFileReader.init(audioFileURL: url,
                                                    samplingRate: Float(audioManager!.samplingRate),
                                                    numChannels: audioManager!.numOutputChannels)
             
-            tmpFileReader!.currentTime = 0.0
+            tmpFileReader!.currentTime = 0.0 // start from time zero!
             print("Audio file succesfully loaded for \(url)")
             return tmpFileReader
         }else{
@@ -100,7 +110,7 @@ class AudioModel {
             
             // read from file, loading into data (a float pointer)
             if let arrayData = data{
-                // get samples from audio file
+                // get samples from audio file, pass array by reference
                 file.retrieveFreshAudio(arrayData,
                                         numFrames: numFrames,
                                         numChannels: numChannels)
