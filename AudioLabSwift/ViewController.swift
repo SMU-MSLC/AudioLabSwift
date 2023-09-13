@@ -12,7 +12,7 @@ import Metal
 
 class ViewController: UIViewController {
 
-    
+    //MARK: 1. The instantiaiton of the Audio Model
     let audio = AudioModel()
     
     override func viewDidLoad() {
@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         // start doing whatever the audio model is supposed to do
         audio.play()
         
-       
+       //TODO: LOOK AT THE PLIST FOR RECORDING PERMISSIONS
     }
     
     
