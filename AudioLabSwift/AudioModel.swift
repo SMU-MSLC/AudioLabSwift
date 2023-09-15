@@ -17,7 +17,7 @@ class AudioModel {
     // this is a computed property in swift
     // when asked for, the array will be calculated from the input buffer
     var timeData:[Float]{
-        get{
+        get{ //override getter, get frech data from buffer
             self.inputBuffer!.fetchFreshData(&_timeData,
                                              withNumSamples: Int64(BUFFER_SIZE))
             return _timeData

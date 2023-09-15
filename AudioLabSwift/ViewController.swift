@@ -20,8 +20,11 @@ class ViewController: UIViewController {
         static let AUDIO_BUFFER_SIZE = 1024*4
     }
     
-    // setup audio model
+    // setup audio model, tell it how large to make a buffer
     let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
+    
+    // setup a view to show the different graphs
+    // this is like the canvas we will use to draw!
     lazy var graph:MetalGraph? = {
         return MetalGraph(userView: self.view)
     }()
@@ -32,33 +35,36 @@ class ViewController: UIViewController {
         
         // add in a graph for displaying the audio
         if let graph = self.graph {
+            // create a graph called "time" that we can update
             graph.addGraph(withName: "time",
                            numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+            
+            // make some nice vertical grids on the graph
             graph.makeGrids()
         }
         
         
         // start up the audio model here, querying microphone
-        audio.startMicrophoneProcessing()
-
-        audio.play()
+        audio.startMicrophoneProcessing() // setup for microphone
+        audio.play() // and begin!
         
         // run the loop for updating the graph peridocially
-        Timer.scheduledTimer(timeInterval: 0.05, target: self,
-            selector: #selector(self.updateGraph),
-            userInfo: nil,
-            repeats: true)
+        // 0.05 is about 20FPS update
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+            self.updateGraph()
+        }
        
     }
     
     // periodically, update the graph with refreshed FFT Data
-    @objc
     func updateGraph(){
-        // periodically, display the audio data
-        self.graph?.updateGraph(
-            data: self.audio.timeData,
-            forKey: "time"
-        )
+        // display the audio data
+        if let graph = self.graph {
+            graph.updateGraph(
+                data: self.audio.timeData, // graph the data
+                forKey: "time" // for this graph key (we only have one)
+            )
+        }
         
     }
     
