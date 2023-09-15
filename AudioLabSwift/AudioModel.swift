@@ -98,13 +98,27 @@ class AudioModel {
         // while pretty fast, this loop is still not quite as fast as
         // writing the code in c, so I placed a function in Novocaine to do it for you
         // use setOutputBlockToPlaySineWave() in Novocaine
+        // EDIT: fixed in 2023
         if let arrayData = data{
             var i = 0
-            while i<numFrames{
-                arrayData[i] = sin(phase)
-                phase += phaseIncrement
-                if (phase >= sineWaveRepeatMax) { phase -= sineWaveRepeatMax }
-                i+=1
+            let chan = Int(numChannels)
+            let frame = Int(numFrames)
+            if chan==1{
+                while i<frame{
+                    arrayData[i] = sin(phase)
+                    phase += phaseIncrement
+                    if (phase >= sineWaveRepeatMax) { phase -= sineWaveRepeatMax }
+                    i+=1
+                }
+            }else if chan==2{
+                let len = frame*chan
+                while i<len{
+                    arrayData[i] = sin(phase)
+                    arrayData[i+1] = arrayData[i]
+                    phase += phaseIncrement
+                    if (phase >= sineWaveRepeatMax) { phase -= sineWaveRepeatMax }
+                    i+=2
+                }
             }
         }
     }
