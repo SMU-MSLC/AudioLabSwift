@@ -25,7 +25,7 @@ class AudioModel {
 
     }
     
-    // public function for starting processing of microphone data
+    /// Set the audio callback for microphone processing.
     func startMicrophoneProcessing(){
         if let manager = self.audioManager{
             // this sets the input block whenever the manager is played
@@ -33,8 +33,10 @@ class AudioModel {
         }
     }
     
-    // You must call this when you want the audio to start being handled by our model
+    /// Begin handling queries from the audio card.
+    /// You must call this when you want the audio to start being processed by the model.
     func play(){
+        
         if let manager = self.audioManager{
             manager.play()
         }
