@@ -10,58 +10,79 @@ import UIKit
 import Metal
 
 
-let AUDIO_BUFFER_SIZE = 1024*4
+
 
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var userView: UIView!
+    struct AudioConstants{
+        static let AUDIO_BUFFER_SIZE = 1024*4
+    }
     
-    let audio = AudioModel(buffer_size: AUDIO_BUFFER_SIZE)
+    // setup audio model
+    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
     lazy var graph:MetalGraph? = {
-        return MetalGraph(mainView: self.view)
+        return MetalGraph(userView: self.userView)
     }()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let graph = self.graph{
+            graph.setBackgroundColor(r: 0, g: 0, b: 0, a: 1)
+            
+            // add in graphs for display
+            // note that we need to normalize the scale of this graph
+            // becasue the fft is returned in dB which has very large negative values and some large positive values
+            graph.addGraph(withName: "fft",
+                            shouldNormalizeForFFT: true,
+                            numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE/2)
+            
+            graph.addGraph(withName: "time",
+                numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+            
+            graph.addGraph(withName: "fftMaxBins", shouldNormalizeForFFT: true,numPointsInGraph:20)
+            
+            graph.makeGrids() // add grids to graph
+        }
         
-        // add in graphs for display
-        graph?.addGraph(withName: "fft",
-                        shouldNormalize: true,
-                        numPointsInGraph: AUDIO_BUFFER_SIZE/2)
-        
-        graph?.addGraph(withName: "time",
-            shouldNormalize: false,
-            numPointsInGraph: AUDIO_BUFFER_SIZE)
-        
-        // just start up the audio model here
-        audio.startMicrophoneProcessing(withFps: 10)
-        //audio.startProcesingAudioFileForPlayback()
-        audio.startProcessingSinewaveForPlayback(withFreq: 630.0)
+        // start up the audio model here, querying microphone
+//        audio.startMicrophoneProcessing(withFps: 20) // preferred number of FFT calculations per second
+        audio.startFileProcessing(withFps: 20)
         audio.play()
         
         // run the loop for updating the graph peridocially
-        Timer.scheduledTimer(timeInterval: 0.05, target: self,
-            selector: #selector(self.updateGraph),
-            userInfo: nil,
-            repeats: true)
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+            self.updateGraph()
+        }
        
     }
     
-    
-    @objc
+    // periodically, update the graph with refreshed FFT Data
     func updateGraph(){
-        self.graph?.updateGraph(
-            data: self.audio.fftData,
-            forKey: "fft"
-        )
         
-        self.graph?.updateGraph(
-            data: self.audio.timeData,
-            forKey: "time"
-        )
+        if let graph = self.graph{
+            graph.updateGraph(
+                data: self.audio.fftData,
+                forKey: "fft"
+            )
+            
+            graph.updateGraph(
+                data: self.audio.timeData,
+                forKey: "time"
+            )
+            graph.updateGraph(data: self.audio.binnedFftData, forKey: "fftMaxBins")
+        }
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        audio.pause()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        audio.play()
     }
     
     
