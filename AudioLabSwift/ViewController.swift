@@ -90,6 +90,7 @@ class ViewController: UIViewController {
                 data: subArray,
                 forKey: "fftZoomed"
             )
+            //TODO: should this be here in the View controller? Or in Model?
             
         }
         
