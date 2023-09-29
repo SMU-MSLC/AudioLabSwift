@@ -143,7 +143,8 @@ class ViewController: UIViewController {
             // BONUS: show the zoomed FFT
             // we can start at about 150Hz and show the next 300 points
             // actual Hz = f_0 * N/F_s
-            let startIdx:Int = 150 * AudioConstants.AUDIO_BUFFER_SIZE/audio.samplingRate
+            let minfreq = min(min(frequency1,frequency2),frequency3)
+            let startIdx:Int = (Int(minfreq)-50) * AudioConstants.AUDIO_BUFFER_SIZE/audio.samplingRate
             let subArray:[Float] = Array(self.audio.fftData[startIdx...startIdx+300])
             graph.updateGraph(
                 data: subArray,
