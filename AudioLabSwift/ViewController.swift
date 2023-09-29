@@ -26,9 +26,68 @@ class ViewController: UIViewController {
         return MetalGraph(userView: self.userView)
     }()
     
+    var frequency1:Float = 300 {
+        didSet{
+            audio.sineFrequency1 = frequency1
+            labelF1.text = "F1: \(frequency1)"
+        }
+    }
+    var frequency2:Float = 300 {
+        didSet{
+            audio.sineFrequency2 = frequency2
+            labelF2.text = "F2: \(frequency2)"
+        }
+    }
+    var frequency3:Float = 300 {
+        didSet{
+            audio.sineFrequency3 = frequency3
+            labelF3.text = "F3: \(frequency3)"
+        }
+    }
+    
+    @IBOutlet weak var labelF1: UILabel!
+    @IBOutlet weak var labelF2: UILabel!
+    @IBOutlet weak var labelF3: UILabel!
+    
+    @IBAction func setClose(_ sender: Any) {
+        if frequency1 == 900 {
+            frequency1 = 500
+            frequency2 = 600
+            frequency3 = 900
+        }else if frequency1 == 500{
+            frequency1 = 550
+            frequency2 = 600
+        }else if frequency1 == 550{
+            frequency1 = 590
+            frequency2 = 600
+        }else{
+            frequency1 = 900
+        }
+        
+    }
+    
+    @IBAction func shouldPulse(_ sender: UISwitch) {
+        audio.pulsing = sender.isOn
+    }
+    
+    @IBAction func sliderF1(_ sender: UISlider) {
+        frequency1 = sender.value
+    }
+    
+    @IBAction func sliderF2(_ sender: UISlider) {
+        frequency2 = sender.value
+    }
+    
+    @IBAction func sliderF3(_ sender: UISlider) {
+        frequency3 = sender.value
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        frequency1 = 330
+        frequency2 = 660
+        frequency3 = 990
         
         if let graph = self.graph{
             graph.setBackgroundColor(r: 0, g: 0, b: 0, a: 1)
@@ -90,7 +149,7 @@ class ViewController: UIViewController {
                 data: subArray,
                 forKey: "fftZoomed"
             )
-            //TODO: should this be here in the View controller? Or in Model?
+            
             
         }
         
