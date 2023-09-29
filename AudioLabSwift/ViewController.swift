@@ -50,18 +50,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var labelF3: UILabel!
     
     @IBAction func setClose(_ sender: Any) {
-        if frequency1 == 900 {
-            frequency1 = 500
-            frequency2 = 600
-            frequency3 = 900
-        }else if frequency1 == 500{
-            frequency1 = 550
-            frequency2 = 600
-        }else if frequency1 == 550{
-            frequency1 = 590
-            frequency2 = 600
+        let diff = abs(frequency1-frequency2)
+        if diff > 100 {
+            frequency2 = frequency1 + 99
+        }else if diff > 60{
+            frequency2 = frequency1 + 51
+        }else if diff > 30{
+            frequency2 = frequency1 + 10
         }else{
-            frequency1 = 900
+            frequency2 = frequency1 + 300
         }
         
     }
