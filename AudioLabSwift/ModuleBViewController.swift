@@ -63,6 +63,7 @@ class ModuleBViewController: UIViewController {
         // Handle Audio
         audio.play()
         
+        
         Timer.scheduledTimer(timeInterval: 1.0 / 20, target: self, selector: #selector(updateDecibelLabel), userInfo: nil, repeats: true)
         
         // Run Loop For Updating View Periodically
