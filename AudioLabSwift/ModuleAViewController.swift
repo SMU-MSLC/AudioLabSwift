@@ -56,6 +56,7 @@ class ModuleAViewController: UIViewController {
             self.updateView()
         }
     }
+    // Function that runs the same times as the audio manager to update the labels
     @objc func runOnInterval(){
 //        print("Hello World")
         

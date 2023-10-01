@@ -42,6 +42,7 @@ class AudioModel {
         return ((-1 * x) + Float(numVals + 1)) / Float(numVals + 1)
     }
     // Anything Not Lazily Instantiated Should Be Allocated Here
+    ///Initialize audio model with buffer size and lookback window for weighted average of previous sound values
     init(buffer_size:Int,lookback:Int=10) {
         BUFFER_SIZE = buffer_size
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
@@ -57,16 +58,11 @@ class AudioModel {
             weightsSum += wt
         }
         
-//        print(weights)
-//        print("weights : \(weightsSum)")
-//
-//        print(weights,weightsSum)
     }
 
+    ///Populate self.peak1Freq and self.peak2Freq with a given windowSize for finding the max value
     public func calcLoudestSounds(windowSize:Int=3){
         var freqRes:Float = -10.0
-//        print(frozenFftData[0])
-        
         var peakLookup = Dictionary<Float, Int>(minimumCapacity: frozenFftData.count)
         
         var peaks:[Float] = []
@@ -74,9 +70,8 @@ class AudioModel {
         for i in 0...(frozenFftData.count - windowSize) {
             var maxValue:Float = 0.0
             vDSP_maxv(&frozenFftData + i, 1, &maxValue, vDSP_Length(windowSize))
-//            print("maxV: \(maxValue) | middle: \(fftData[i + Int(windowSize/2)])")
+
             if maxValue == frozenFftData[i + Int(windowSize/2)] {
-//                print("FOUND MAX: \(i)")
                 peaks.append(maxValue)
                 peakLookup[maxValue] = i
             }
@@ -94,17 +89,14 @@ class AudioModel {
         self.peak1Freq = quadraticApprox(peakLocation: peak1Loc!, deltaF: freqRes)
         self.peak2Freq = quadraticApprox(peakLocation: peak2Loc!, deltaF: freqRes)
         
-//        return quadraticApprox(peakLocation: peak1Loc!, deltaF: freqRes)
     }
+    //Used to approximate the actual peak hz based on the points around the peak
     private func quadraticApprox(peakLocation:Int,deltaF:Float) -> Float {
-//        let middleTerm = (frozenFftData[peakLocation - 1] - frozenFftData[peakLocation + 1]) / (frozenFftData[])
         let m1 = frozenFftData[peakLocation-1]
         let m2 = frozenFftData[peakLocation]
         let m3 = frozenFftData[peakLocation + 1]
         
-        
         let f2 = Float(peakLocation) * deltaF
-        
         
         return f2 + ((m1-m2)/(m3 - 2 * m2 + m1)) * (deltaF / 2.0)
     }
@@ -115,12 +107,10 @@ class AudioModel {
         var isTrue = false
         var weightedTimeVals:[Float] = prevMaxTimeData
         vDSP_vmul(prevMaxTimeData, 1, weights, 1, &weightedTimeVals, 1, vDSP_Length(prevMaxTimeData.count))
-//        print(weightedTimeVals)
         let wtAvg = vDSP.sum(weightedTimeVals) / weightsSum
     
         let pctDiff = (maxTimeVal - wtAvg) / wtAvg
         
-//        print("wtAvg: \(wtAvg) | currMax: \(maxTimeVal) | pctDiff \(pctDiff)")
         
         if pctDiff > cutoff {
             isTrue = true
