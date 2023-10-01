@@ -1,5 +1,5 @@
 //
-//  Module1ViewController.swift
+//  ModuleAViewController.swift
 //  AudioLabSwift
 //
 //  Created by William Landin on 9/24/23.
@@ -11,7 +11,7 @@
 
 import UIKit
 
-class Module1ViewController: UIViewController {
+class ModuleAViewController: UIViewController {
 
     
     //button to pause recording and make 2 other labels appear.

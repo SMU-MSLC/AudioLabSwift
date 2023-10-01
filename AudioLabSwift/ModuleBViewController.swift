@@ -1,36 +1,47 @@
 //
-//  Module2ViewController.swift
+//  ModuleBViewController.swift
 //  AudioLabSwift
 //
 //  Created by William Landin on 9/25/23.
 //  Copyright © 2023 Eric Larson. All rights reserved.
 //
+//  Lab Two: Audio Filtering, FFT, Doppler Shifts
+//  Trevor Dohm, Will Landin, Ray Irani, Alex Shockley
+//
 
+// Import Statements
 import UIKit
 
+// Enumerate Gesture Types
 enum GestureType {
     case towardsMicrophone
     case awayFromMicrophone
     case noGesture
 }
 
-class Module2ViewController: UIViewController {
+class ModuleBViewController: UIViewController {
     
-    // Create AudioConstants (Structure With Any
-    // Constants Necessary To Run AudioModel)
-    struct AudioConstants {
+    // Create AudioConstants For Module B
+    // (Structure With Any Constants Necessary To Run AudioModel)
+    struct ModuleBAudioConstants {
         static let AUDIO_BUFFER_SIZE = 1024 * 4
     }
     
     // Create AudioModel Object With Specified Buffer Size
-    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
+    let audio = AudioModel(buffer_size: ModuleBAudioConstants.AUDIO_BUFFER_SIZE)
+    
+    // Lazy Instantiation For Graph
+    lazy var graph:MetalGraph? = {
+        return MetalGraph(userView: self.view)
+    }()
 
     // Outlets Defined On Storyboard - Hopefully Self-Explanatory!
     @IBOutlet weak var gesture_label: UILabel!
     @IBOutlet weak var decibel_label: UILabel!
     @IBOutlet weak var tone_slider_label: UILabel!
     @IBOutlet weak var tone_slider: UISlider!
-
+    @IBOutlet weak var graphView: UIView!
+    
     // Runs When View Loads (With Super Method)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,15 +49,12 @@ class Module2ViewController: UIViewController {
         // Querying Microphone, Speaker From AudioModel With Preferred
         // Calculations (Gestures, FFT, Doppler Shifts) Per Second
         audio.startDualProcessing(withFps: 20)
+        
+        // Set Initial Tone Frequency Based On Slider Value
+        audio.setToneFrequency(tone_slider.value)
 
         // Handle Audio
         audio.play()
-        
-        // Set the initial tone frequency based on the slider value
-        audio.setToneFrequency(tone_slider.value)
-        
-        // Add an observer to update tone frequency when the slider is moved
-        tone_slider.addTarget(self, action: #selector(toneSliderValueChanged(_:)), for: .valueChanged)
         
         Timer.scheduledTimer(timeInterval: 1.0 / 20, target: self, selector: #selector(updateDecibelLabel), userInfo: nil, repeats: true)
     }
@@ -66,14 +74,14 @@ class Module2ViewController: UIViewController {
         }
     }
     
-    // Tone slider value changed
-    @objc func toneSliderValueChanged(_ sender: UISlider) {
+    // Action When Tone Slider Value Changed
+    @IBAction func ToneSliderValueChanged(_ sender: UISlider) {
         audio.setToneFrequency(sender.value)
         
-        // Update the slider label text with the current slider value
+        // Update Slider Label Text With Current Slider Value
         tone_slider_label.text = String(format: "Tone Slider: %.2f kHz", sender.value / 1000.0)
     }
-        
+
     // Update the label to display FFT magnitude in decibels
     @objc func updateDecibelLabel() {
         let maxDecibels = audio.getMaxDecibels()
