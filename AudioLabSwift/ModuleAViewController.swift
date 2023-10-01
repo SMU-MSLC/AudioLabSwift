@@ -49,11 +49,15 @@ class ModuleAViewController: UIViewController {
         audio.startMicrophoneProcessing(withFps: 20)
         
         audio.play()
+        // Repeat FPS Times / Second Using Timer Class
+        let withFpsTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 20.0, repeats: true) { [weak self] (withFpsTimer) in
+            self?.runOnInterval()
+        }
+       
+        //Timer.scheduledTimer(timeInterval: 1.0/20.0, target: self, selector: #selector(runOnInterval), userInfo: nil, repeats: true)
         
-        Timer.scheduledTimer(timeInterval: 1.0/20.0, target: self, selector: #selector(runOnInterval), userInfo: nil, repeats: true)
-        // Do any additional setup after loading the view.
-        Timer.scheduledTimer(withTimeInterval: 1.0/20.0, repeats: true) { _ in
-            self.updateView()
+        let updateViewTimer = Timer.scheduledTimer(withTimeInterval: 1.0/20.0, repeats: true) { [weak self] (updateViewTimer) in
+            self?.updateView()
         }
     }
     // Function that runs the same times as the audio manager to update the labels
