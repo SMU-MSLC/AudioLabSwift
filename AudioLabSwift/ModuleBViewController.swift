@@ -71,6 +71,10 @@ class ModuleBViewController: UIViewController {
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        audio.pause()
+    }
+    
     // Run Periodic Updates
     @objc func updateView() {
         self.graph?.updateGraph(
