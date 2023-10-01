@@ -24,16 +24,67 @@ class AudioModel {
     private var BUFFER_SIZE:Int
     var timeData:[Float]
     var fftData:[Float]
+    var frozenFftData:[Float]
+    var frozenTimeData:[Float]
     
+    private var weights:[Float]
+    private var weightsSum:Float
+    private var prevMaxTimeData:[Float] = []
     // ====================
     // MARK: Public Methods
     // ====================
-    
+    private var lookback:Int
+    private func weightFunc(x:Float,numVals:Int) -> Float{
+//        return Float(((-1 * x) + numVals)/Float(numVals))
+        return ((-1 * x) + Float(numVals + 1)) / Float(numVals + 1)
+    }
     // Anything Not Lazily Instantiated Should Be Allocated Here
-    init(buffer_size:Int) {
+    init(buffer_size:Int,lookback:Int=10) {
         BUFFER_SIZE = buffer_size
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE / 2)
+        weights = []
+        weightsSum = 0
+        frozenFftData = []
+        frozenTimeData = []
+        self.lookback = lookback
+        for i in 1...lookback {
+            let wt = weightFunc(x: Float(i),numVals: lookback)
+            weights.append(wt)
+            weightsSum += wt
+        }
+        
+//        print(weights)
+//        print("weights : \(weightsSum)")
+//
+//        print(weights,weightsSum)
+    }
+
+    ///Check if a sufficiently large sound was detected by the microphone (above a certain float threshold for average sin wave)
+    public func isLoudSound(cutoff:Float) -> Bool {
+        var maxTimeVal:Float = 0.0
+        vDSP_maxv(timeData, 1, &maxTimeVal, vDSP_Length(timeData.count))
+        var isTrue = false
+        var weightedTimeVals:[Float] = prevMaxTimeData
+        vDSP_vmul(prevMaxTimeData, 1, weights, 1, &weightedTimeVals, 1, vDSP_Length(prevMaxTimeData.count))
+//        print(weightedTimeVals)
+        let wtAvg = vDSP.sum(weightedTimeVals) / weightsSum
+    
+        let pctDiff = (maxTimeVal - wtAvg) / wtAvg
+        
+        print("wtAvg: \(wtAvg) | currMax: \(maxTimeVal) | pctDiff \(pctDiff)")
+        
+        if pctDiff > cutoff {
+            isTrue = true
+            self.frozenFftData = fftData
+            self.frozenTimeData = timeData
+        }
+        prevMaxTimeData.insert(maxTimeVal, at: 0)
+        if prevMaxTimeData.count > self.lookback {
+            prevMaxTimeData.popLast()
+        }
+        
+        return isTrue
     }
     
     // Public Function For Starting Processing Microphone Data
