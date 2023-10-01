@@ -82,44 +82,69 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rir-nQ-MHm">
-                                <rect key="frame" x="132" y="152" width="150" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rir-nQ-MHm">
+                                <rect key="frame" x="132" y="141" width="150" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="aX2-un-Y81"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Lock Frequency!"/>
                                 <connections>
                                     <action selector="lockFreqPressed:" destination="aRf-vc-GSu" eventType="touchUpInside" id="csV-bt-TYy"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The Microphone is listening! Lock the frequency to see the 2 highest Hz values!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTE-jl-s1X">
-                                <rect key="frame" x="0.0" y="92" width="414" height="52"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Microphone is listening! Lock the frequency to see the 2 highest Hz values!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTE-jl-s1X">
+                                <rect key="frame" x="0.0" y="92" width="414" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Highest Hz: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cm4-xc-Uh2" userLabel="Highest Hz:">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Highest Hz: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cm4-xc-Uh2" userLabel="Highest Hz:">
                                 <rect key="frame" x="47" y="436" width="321" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2nd Highest Hz:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17o-EH-G9Y">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2nd Highest Hz:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17o-EH-G9Y">
                                 <rect key="frame" x="47" y="500" width="321" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ci3-Zq-xzL" userLabel="graphView">
+                                <rect key="frame" x="20" y="184" width="374" height="244"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="374" id="6UI-c6-ga0"/>
+                                    <constraint firstAttribute="height" constant="244" id="EMO-Kc-IGE"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="fhK-Ta-9ko"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="xTE-jl-s1X" firstAttribute="top" secondItem="fhK-Ta-9ko" secondAttribute="top" id="0Eq-Xt-27w"/>
+                            <constraint firstItem="xTE-jl-s1X" firstAttribute="trailing" secondItem="fhK-Ta-9ko" secondAttribute="trailing" id="Aar-wg-076"/>
+                            <constraint firstItem="17o-EH-G9Y" firstAttribute="leading" secondItem="fhK-Ta-9ko" secondAttribute="leading" constant="47" id="Bu0-O0-Lsh"/>
+                            <constraint firstItem="Cm4-xc-Uh2" firstAttribute="top" secondItem="Ci3-Zq-xzL" secondAttribute="bottom" constant="8" symbolic="YES" id="LaP-Xi-0AL"/>
+                            <constraint firstItem="fhK-Ta-9ko" firstAttribute="trailing" secondItem="17o-EH-G9Y" secondAttribute="trailing" constant="46" id="cka-7P-jv4"/>
+                            <constraint firstItem="Cm4-xc-Uh2" firstAttribute="leading" secondItem="fhK-Ta-9ko" secondAttribute="leading" constant="47" id="dLa-vU-zEB"/>
+                            <constraint firstItem="Ci3-Zq-xzL" firstAttribute="centerX" secondItem="xTE-jl-s1X" secondAttribute="centerX" id="ipa-uD-S3j"/>
+                            <constraint firstItem="fhK-Ta-9ko" firstAttribute="trailing" secondItem="Cm4-xc-Uh2" secondAttribute="trailing" constant="46" id="ohN-lo-vWu"/>
+                            <constraint firstItem="xTE-jl-s1X" firstAttribute="leading" secondItem="fhK-Ta-9ko" secondAttribute="leading" id="uZK-a8-iRe"/>
+                            <constraint firstItem="17o-EH-G9Y" firstAttribute="top" secondItem="Cm4-xc-Uh2" secondAttribute="bottom" constant="40" id="vvL-sG-IbY"/>
+                            <constraint firstItem="rir-nQ-MHm" firstAttribute="centerX" secondItem="xTE-jl-s1X" secondAttribute="centerX" id="wCu-rN-4M8"/>
+                            <constraint firstItem="Ci3-Zq-xzL" firstAttribute="top" secondItem="rir-nQ-MHm" secondAttribute="bottom" constant="8" symbolic="YES" id="xYh-nM-9nK"/>
+                            <constraint firstItem="rir-nQ-MHm" firstAttribute="top" secondItem="xTE-jl-s1X" secondAttribute="bottom" constant="8" symbolic="YES" id="xtd-Mm-GI6"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="QIs-6i-z9K"/>
                     <connections>
+                        <outlet property="firstHzLabel" destination="Cm4-xc-Uh2" id="RfD-r2-beq"/>
+                        <outlet property="graphView" destination="Ci3-Zq-xzL" id="tqW-ui-r2o"/>
                         <outlet property="lock_Hz_button" destination="rir-nQ-MHm" id="jIt-H2-240"/>
                         <outlet property="module_1_desc_button" destination="xTE-jl-s1X" id="PGv-W6-vxb"/>
+                        <outlet property="secondHzLabel" destination="17o-EH-G9Y" id="X3u-29-nrB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBN-qG-jSL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
