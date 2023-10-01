@@ -50,7 +50,7 @@ class AudioModel {
     }
     
     // Public Function For Starting Processing For Both Microphone, Speaker Data
-    func startDualProcessing(withFps:Double) {
+    func startDualProcessing(withFps:Double, withFreq:Float = 17500.0) {
         
         // Setup Microphone, Speaker For Copy To Circular Buffer
         if let manager = self.audioManager{
@@ -65,6 +65,15 @@ class AudioModel {
 //                self.copyBins(numBins: 20)
             }
             
+            // Function for playing the sine wave with specific
+            sineFrequency = withFreq
+                // Two examples are given that use either objective c or that use swift
+                //   the swift code for loop is slightly slower thatn doing this in c,
+                //   but the implementations are very similar
+                //self.audioManager?.outputBlock = self.handleSpeakerQueryWithSinusoid // swift for loop
+            self.audioManager?.setOutputBlockToPlaySineWave(sineFrequency)
+            
+            
 //            Timer.scheduledTimer(withTimeInterval: 1.0/5.0, repeats: true) { _ in
 //                // set to opposite
 //                self.pulseValue += 1
@@ -73,6 +82,11 @@ class AudioModel {
 //                }
 //            }
         }
+    }
+    
+    // Set the inaudible tone frequency
+    func setToneFrequency(_ frequency: Float) {
+        sineFrequency = frequency
     }
     
     func startFileProcessing(withFps:Double) {
@@ -195,11 +209,6 @@ class AudioModel {
 //                    phaseIncrement = Float(2*Double.pi*Double(sineFrequency)/manager.samplingRate)
             self.audioManager?.sineFrequency = sineFrequency
         }
-    }
-    
-    // Set the inaudible tone frequency
-    func setToneFrequency(_ frequency: Float) {
-        sineFrequency = frequency
     }
     
     // SWIFT SINE WAVE
