@@ -74,23 +74,14 @@
             </objects>
             <point key="canvasLocation" x="-671" y="124"/>
         </scene>
-        <!--Module1 View Controller-->
+        <!--ModuleA View Controller-->
         <scene sceneID="7i9-qC-Rvn">
             <objects>
-                <viewController id="aRf-vc-GSu" customClass="Module1ViewController" customModule="AudioLabSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="aRf-vc-GSu" customClass="ModuleAViewController" customModule="AudioLabSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="y9D-g1-9rU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2C-Eh-IRl">
-                                <rect key="frame" x="213" y="779" width="181" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Flipped Module stuff"/>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="KKu-4y-Pjc"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rir-nQ-MHm">
                                 <rect key="frame" x="132" y="152" width="150" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -135,10 +126,10 @@
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="123.88392857142857"/>
         </scene>
-        <!--Module2 View Controller-->
+        <!--ModuleB View Controller-->
         <scene sceneID="aVY-XJ-s3q">
             <objects>
-                <viewController id="g5c-zV-sgi" customClass="Module2ViewController" customModule="AudioLabSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="g5c-zV-sgi" customClass="ModuleBViewController" customModule="AudioLabSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XhK-tH-UP3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -151,38 +142,56 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Decibels: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bis-ky-haX">
-                                <rect key="frame" x="73" y="435" width="116" height="28"/>
+                                <rect key="frame" x="73" y="300" width="116" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="pv6-fQ-kWn">
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="17500" minValue="15000" maxValue="20000" translatesAutoresizingMaskIntoConstraints="NO" id="pv6-fQ-kWn">
                                 <rect key="frame" x="23" y="704" width="368" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="ToneSliderValueChanged:" destination="g5c-zV-sgi" eventType="valueChanged" id="7a8-23-nUb"/>
+                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="??? Hz" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JrR-ey-buO">
-                                <rect key="frame" x="262" y="434" width="79" height="28"/>
+                                <rect key="frame" x="262" y="300" width="79" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="24"/>
                                 <color key="textColor" systemColor="systemBlueColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tone Slider kHz val:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ytd-NR-Xcz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tone Slider 17.50 kHz" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ytd-NR-Xcz">
                                 <rect key="frame" x="31" y="741" width="353" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3BW-RQ-8gW" userLabel="Graph View">
+                                <rect key="frame" x="20" y="336" width="374" height="321"/>
+                                <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="321" id="WgQ-2L-VuL"/>
+                                    <constraint firstAttribute="width" constant="374" id="Zjy-VU-ypK"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pxh-5Z-Gra"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="leading" secondItem="XhK-tH-UP3" secondAttribute="leadingMargin" id="GhD-ZG-rmx"/>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="trailing" secondItem="XhK-tH-UP3" secondAttribute="trailingMargin" id="IGL-WX-aXZ"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="3BW-RQ-8gW" secondAttribute="bottom" constant="205" id="j9u-BF-mvH"/>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="top" secondItem="XhK-tH-UP3" secondAttribute="topMargin" constant="244" id="yOq-pF-h7s"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="EuX-Y9-y8d"/>
                     <connections>
                         <outlet property="decibel_label" destination="JrR-ey-buO" id="UAO-Yi-3fk"/>
                         <outlet property="gesture_label" destination="vjk-y1-saK" id="Nwb-qf-vvY"/>
+                        <outlet property="graphView" destination="3BW-RQ-8gW" id="rvW-Ho-stw"/>
                         <outlet property="tone_slider" destination="pv6-fQ-kWn" id="jjq-BI-zaO"/>
                         <outlet property="tone_slider_label" destination="Ytd-NR-Xcz" id="6qJ-Dx-ITO"/>
                     </connections>
@@ -216,14 +225,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YB8-JK-DSb">
-                                <rect key="frame" x="20" y="92" width="374" height="405"/>
+                                <rect key="frame" x="20" y="48" width="374" height="405"/>
                                 <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="405" id="gzF-q7-3S9"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-ef-Pho">
-                                <rect key="frame" x="20" y="505" width="374" height="146"/>
+                                <rect key="frame" x="20" y="461" width="374" height="146"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="146" id="T3n-o9-0M8"/>
                                 </constraints>
