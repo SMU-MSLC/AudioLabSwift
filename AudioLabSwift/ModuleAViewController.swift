@@ -28,11 +28,11 @@ class ModuleAViewController: UIViewController {
     }()
     
     struct ModuleBAudioConstants {
-        static let AUDIO_BUFFER_SIZE = 1024 * 4
+        static let AUDIO_BUFFER_SIZE = 1024 * 32
     }
     
     // Create AudioModel Object With Specified Buffer Size
-    let audio = AudioModel(buffer_size: ModuleBAudioConstants.AUDIO_BUFFER_SIZE)
+    let audio = AudioModel(buffer_size: ModuleBAudioConstants.AUDIO_BUFFER_SIZE,lookback: 45)
     
     
     override func viewDidLoad() {
@@ -44,6 +44,8 @@ class ModuleAViewController: UIViewController {
         graph?.addGraph(withName: "time",
             numPointsInGraph: ModuleBAudioConstants.AUDIO_BUFFER_SIZE)
         
+        graph?.addGraph(withName: "timeUnfrozen",
+            numPointsInGraph: ModuleBAudioConstants.AUDIO_BUFFER_SIZE)
         audio.startMicrophoneProcessing(withFps: 20)
         
         audio.play()
@@ -56,12 +58,13 @@ class ModuleAViewController: UIViewController {
     }
     @objc func runOnInterval(){
 //        print("Hello World")
+        
         if audio.isLoudSound(cutoff: 1.0) {
-            secondHzLabel.text = "LOUD SOUND"
-//            print("Loud Sound")
-        } else {
-            secondHzLabel.text = "NO Loud Sound"
+            audio.calcLoudestSounds(windowSize: 3)
         }
+        firstHzLabel.text = "First Loudest: \(audio.peak1Freq)"
+        secondHzLabel.text = "Second Loudest: \(audio.peak2Freq)"
+        
     }
     
     @objc func updateView() {
@@ -72,6 +75,10 @@ class ModuleAViewController: UIViewController {
         self.graph?.updateGraph(
             data: self.audio.frozenTimeData,
             forKey: "time"
+        )
+        self.graph?.updateGraph(
+            data: self.audio.timeData,
+            forKey: "timeUnfrozen"
         )
     }
     

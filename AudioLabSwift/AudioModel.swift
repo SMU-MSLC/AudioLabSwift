@@ -26,6 +26,9 @@ class AudioModel {
     var fftData:[Float]
     var frozenFftData:[Float]
     var frozenTimeData:[Float]
+    var peak1Freq:Float = 0.0
+    var peak2Freq:Float = 0.0
+    
     
     private var weights:[Float]
     private var weightsSum:Float
@@ -60,6 +63,51 @@ class AudioModel {
 //        print(weights,weightsSum)
     }
 
+    public func calcLoudestSounds(windowSize:Int=3){
+        var freqRes:Float = -10.0
+//        print(frozenFftData[0])
+        
+        var peakLookup = Dictionary<Float, Int>(minimumCapacity: frozenFftData.count)
+        
+        var peaks:[Float] = []
+        freqRes = Float((self.audioManager?.samplingRate)!) / Float(self.BUFFER_SIZE)
+        for i in 0...(frozenFftData.count - windowSize) {
+            var maxValue:Float = 0.0
+            vDSP_maxv(&frozenFftData + i, 1, &maxValue, vDSP_Length(windowSize))
+//            print("maxV: \(maxValue) | middle: \(fftData[i + Int(windowSize/2)])")
+            if maxValue == frozenFftData[i + Int(windowSize/2)] {
+//                print("FOUND MAX: \(i)")
+                peaks.append(maxValue)
+                peakLookup[maxValue] = i
+            }
+        }
+
+        var peak1:Float = 0.0
+        vDSP_maxv(peaks, 1, &peak1, vDSP_Length(peaks.count))
+        let peak1Loc = peakLookup[peak1]
+        peaks = peaks.filter { $0 != peak1 }
+        
+        var peak2:Float = 0.0
+        vDSP_maxv(peaks, 1, &peak2, vDSP_Length(peaks.count))
+        let peak2Loc = peakLookup[peak2]
+
+        self.peak1Freq = quadraticApprox(peakLocation: peak1Loc!, deltaF: freqRes)
+        self.peak2Freq = quadraticApprox(peakLocation: peak2Loc!, deltaF: freqRes)
+        
+//        return quadraticApprox(peakLocation: peak1Loc!, deltaF: freqRes)
+    }
+    private func quadraticApprox(peakLocation:Int,deltaF:Float) -> Float {
+//        let middleTerm = (frozenFftData[peakLocation - 1] - frozenFftData[peakLocation + 1]) / (frozenFftData[])
+        let m1 = frozenFftData[peakLocation-1]
+        let m2 = frozenFftData[peakLocation]
+        let m3 = frozenFftData[peakLocation + 1]
+        
+        
+        let f2 = Float(peakLocation) * deltaF
+        
+        
+        return f2 + ((m1-m2)/(m3 - 2 * m2 + m1)) * (deltaF / 2.0)
+    }
     ///Check if a sufficiently large sound was detected by the microphone (above a certain float threshold for average sin wave)
     public func isLoudSound(cutoff:Float) -> Bool {
         var maxTimeVal:Float = 0.0
@@ -72,7 +120,7 @@ class AudioModel {
     
         let pctDiff = (maxTimeVal - wtAvg) / wtAvg
         
-        print("wtAvg: \(wtAvg) | currMax: \(maxTimeVal) | pctDiff \(pctDiff)")
+//        print("wtAvg: \(wtAvg) | currMax: \(maxTimeVal) | pctDiff \(pctDiff)")
         
         if pctDiff > cutoff {
             isTrue = true
