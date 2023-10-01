@@ -151,9 +151,6 @@
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="17500" minValue="15000" maxValue="20000" translatesAutoresizingMaskIntoConstraints="NO" id="pv6-fQ-kWn">
                                 <rect key="frame" x="23" y="704" width="368" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="ToneSliderValueChanged:" destination="g5c-zV-sgi" eventType="valueChanged" id="9AY-vq-Jhk"/>
-                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="??? Hz" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JrR-ey-buO">
                                 <rect key="frame" x="262" y="300" width="79" height="28"/>
@@ -169,14 +166,23 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3BW-RQ-8gW" userLabel="Graph View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3BW-RQ-8gW" userLabel="Graph View">
                                 <rect key="frame" x="20" y="336" width="374" height="321"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="321" id="WgQ-2L-VuL"/>
+                                    <constraint firstAttribute="width" constant="374" id="Zjy-VU-ypK"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pxh-5Z-Gra"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="leading" secondItem="XhK-tH-UP3" secondAttribute="leadingMargin" id="GhD-ZG-rmx"/>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="trailing" secondItem="XhK-tH-UP3" secondAttribute="trailingMargin" id="IGL-WX-aXZ"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="3BW-RQ-8gW" secondAttribute="bottom" constant="205" id="j9u-BF-mvH"/>
+                            <constraint firstItem="3BW-RQ-8gW" firstAttribute="top" secondItem="XhK-tH-UP3" secondAttribute="topMargin" constant="244" id="yOq-pF-h7s"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="EuX-Y9-y8d"/>
                     <connections>

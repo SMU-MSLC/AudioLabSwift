@@ -21,6 +21,13 @@ enum GestureType {
 
 class ModuleBViewController: UIViewController {
     
+    // Outlets Defined On Storyboard - Hopefully Self-Explanatory!
+    @IBOutlet weak var gesture_label: UILabel!
+    @IBOutlet weak var decibel_label: UILabel!
+    @IBOutlet weak var tone_slider_label: UILabel!
+    @IBOutlet weak var tone_slider: UISlider!
+    @IBOutlet weak var graphView: UIView!
+    
     // Create AudioConstants For Module B
     // (Structure With Any Constants Necessary To Run AudioModel)
     struct ModuleBAudioConstants {
@@ -32,19 +39,19 @@ class ModuleBViewController: UIViewController {
     
     // Lazy Instantiation For Graph
     lazy var graph:MetalGraph? = {
-        return MetalGraph(userView: self.view)
+        return MetalGraph(userView: self.graphView)
     }()
-
-    // Outlets Defined On Storyboard - Hopefully Self-Explanatory!
-    @IBOutlet weak var gesture_label: UILabel!
-    @IBOutlet weak var decibel_label: UILabel!
-    @IBOutlet weak var tone_slider_label: UILabel!
-    @IBOutlet weak var tone_slider: UISlider!
-    @IBOutlet weak var graphView: UIView!
     
     // Runs When View Loads (With Super Method)
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Add Graphs For Display
+        graph?.addGraph(withName: "fft",
+            shouldNormalizeForFFT: true,
+            numPointsInGraph: ModuleBAudioConstants.AUDIO_BUFFER_SIZE / 2)
+        graph?.addGraph(withName: "time",
+            numPointsInGraph: ModuleBAudioConstants.AUDIO_BUFFER_SIZE)
         
         // Querying Microphone, Speaker From AudioModel With Preferred
         // Calculations (Gestures, FFT, Doppler Shifts) Per Second
@@ -57,9 +64,29 @@ class ModuleBViewController: UIViewController {
         audio.play()
         
         Timer.scheduledTimer(timeInterval: 1.0 / 20, target: self, selector: #selector(updateDecibelLabel), userInfo: nil, repeats: true)
+        
+        // Run Loop For Updating View Periodically
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+            self.updateView()
+        }
+    }
+    
+    // Run Periodic Updates
+    @objc func updateView() {
+        self.graph?.updateGraph(
+            data: self.audio.fftData,
+            forKey: "fft"
+        )
+        self.graph?.updateGraph(
+            data: self.audio.timeData,
+            forKey: "time"
+        )
     }
     
     // Method to handle gesture detection based on Doppler shifts
+    //
+    // FIXME (NEED TO CALL A FUNCTION IN AUDIOMODEL FOR THIS)
+    //
     private func detectGesture(usingFFT fftData: [Float]) -> GestureType {
         // Implement your gesture detection logic based on Doppler shifts here
         // You can analyze the FFT data to determine gestures towards, away, or no gesture
