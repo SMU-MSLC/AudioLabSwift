@@ -119,10 +119,28 @@ class AudioModel {
         }
         prevMaxTimeData.insert(maxTimeVal, at: 0)
         if prevMaxTimeData.count > self.lookback {
-            prevMaxTimeData.popLast()
+            _ = prevMaxTimeData.popLast()
         }
         
         return isTrue
+    }
+    
+    // Obtain Local Averages (LHS, RHS)
+    func localAverages(sliderFreq:Float) -> (Float, Float) {
+        
+        // Calculate FFT Index (Frequency (k) * N / Sampling Frequency)
+        let index = Int(sliderFreq * Float(BUFFER_SIZE) / Float(self.audioManager!.samplingRate))
+        
+        // No. Data Points On RHS / LHS
+        // Chosen For Not Too Much Information
+        let range = 20
+        
+        // Calculate The Average For LHS / RHS For Specific Frequency (Slider) - Note: Generated With Help From GPT
+        let lhsAvg = fftData[(index - range)..<index].reduce(0, +) / Float(range)
+        let rhsAvg = fftData[(index + 1)..<(index + range + 1)].reduce(0, +) / Float(range)
+        
+        // Return Positive (Easier To Use)
+        return (abs(lhsAvg), abs(rhsAvg))
     }
     
     // Public Function For Starting Processing Microphone Data
@@ -223,9 +241,6 @@ class AudioModel {
             // fftData: FFT Of Those Same Samples
             fftHelper!.performForwardFFT(withData: &timeData,
                                          andCopydBMagnitudeToBuffer: &fftData)
-            
-            // FIXME Calculate Maximums Here!
-            
         }
     }
     
@@ -262,12 +277,31 @@ class AudioModel {
     // Calculate and return the maximum decibel value from FFT data
     func getMaxDecibels() -> Float {
         // Use Accelerate framework to calculate the maximum value in decibels
-        var maxDecibels: Float = -Float.greatestFiniteMagnitude
-        vDSP_maxv(fftData, 1, &maxDecibels, vDSP_Length(fftData.count))
+//        var maxDecibels: Float = -Float.greatestFiniteMagnitude
+//        vDSP_maxv(fftData, 1, &maxDecibels, vDSP_Length(fftData.count))
+//
+//        // Convert from linear scale to decibels
+//        let maxDecibelsInLinearScale = 20 * log10f(maxDecibels)
+//        return maxDecibelsInLinearScale
+//        var magnitudeInDecibels = [Float](repeating: 0.0, count: fftData.count)
+//
+//        vDSP_vabs(fftData, 1, &magnitudeInDecibels, 1, vDSP_Length(fftData.count))
+//        var zero: Float = 0
+//        var maximumMagnitude: Float = 0
+//        vDSP_maxv(magnitudeInDecibels, 1, &maximumMagnitude, vDSP_Length(fftData.count))
+//
+//        // Calculate decibels: 20 * log10(maximumMagnitude)
+//        maximumMagnitude = maximumMagnitude < 1e-9 ? 1e-9 : maximumMagnitude  // Avoid log10(0) which is undefined
+//        let decibels = 20.0 * log10(maximumMagnitude)
         
-        // Convert from linear scale to decibels
-        let maxDecibelsInLinearScale = 20 * log10f(maxDecibels)
-        return maxDecibelsInLinearScale
+        let magnitudeSquared = fftData.map { $0 * $0 }  // Calculate magnitude squared
+        let sumOfSquares = magnitudeSquared.reduce(0, +)
+        
+        // Calculate the maximum magnitude in decibels
+        let maximumMagnitude = sqrt(sumOfSquares / Float(fftData.count))
+        let decibels = 20.0 * log10(maximumMagnitude + 1e-9) // Avoid log10(0) which is undefined
+        
+        return decibels
     }
     
     private func handleSpeakerQueryWithSinusoids(data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32){
