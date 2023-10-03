@@ -61,7 +61,6 @@ class ViewController: UIViewController {
         }else{
             frequency2 = frequency1 + 300
         }
-        
     }
     
     @IBAction func shouldPulse(_ sender: UISwitch) {
