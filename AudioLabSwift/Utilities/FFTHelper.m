@@ -161,23 +161,23 @@
 -(void)dealloc{
     
     // free memory (the function uses double indirection for similar functionality to "pass by reference")
-    free(_in_real);
-    free(_out_real);
-    free(_magnitude);
-    free(_timeSeries);
-    free(_split_data.realp);
-    free(_split_data.imagp);
+//    free(_in_real);
+//    free(_out_real);
+//    free(_magnitude);
+//    free(_timeSeries);
+//    free(_split_data.realp);
+//    free(_split_data.imagp);
     
-//    [self safeFree:&_in_real];
-//    [self safeFree:&_out_real];
-//    [self safeFree:&_magnitude];
-//    [self safeFree:&_timeSeries];
-//    [self safeFree:&(_split_data.realp)];
-//    [self safeFree:&(_split_data.imagp)];
+    [self safeFree:&_in_real];
+    [self safeFree:&_out_real];
+    [self safeFree:&_magnitude];
+    [self safeFree:&_timeSeries];
+    [self safeFree:&(_split_data.realp)];
+    [self safeFree:&(_split_data.imagp)];
     
     if(self.winType != WindowTypeRect){
-        free(_window);
-//        [self safeFree:&_window];
+//        free(_window);
+        [self safeFree:&_window];
     }
     
     vDSP_destroy_fftsetup(_fftSetup);
@@ -191,6 +191,7 @@
     _split_data.imagp = nil;
     _fftSetup = nil;
     
+    printf("FFTHelper object was deallocated\n");
 }
 
 -(void) safeFree:(float **) var{

@@ -142,6 +142,10 @@ static pthread_mutex_t outputAudioFileLock;
     free(_outData);
     free(_outputBuffer);
     free(_inputBuffer);
+    _inData = nil;
+    _outData = nil;
+    _outputBuffer = nil;
+    _inputBuffer = nil;
     
     
 }

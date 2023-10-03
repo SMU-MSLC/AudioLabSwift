@@ -73,17 +73,21 @@
     if (self.playing)
         [self pause];
     
-    self.readerBlock = nil;
+    _readerBlock = nil;
     
     // Close the ExtAudioFile
-    ExtAudioFileDispose(self.inputFile);
+    ExtAudioFileDispose(_inputFile);
     
-    free(self.outputBuffer);
-    free(self.holdingBuffer);
+    free(_outputBuffer);
+    free(_holdingBuffer);
+    _outputBuffer = nil;
+    _holdingBuffer = nil;
+    _callbackTimer = nil;
     
 //    [ringBuffer dealloc];
     
 //    [super dealloc];
+    printf("AudioFileReader object was deallocated\n");
 }
 
 
@@ -298,6 +302,7 @@
     // Release the dispatch timer because it holds a reference to this class instance
     [self pause];
     if (self.callbackTimer) {
+        
         //dispatch_release(self.callbackTimer);
         self.callbackTimer = nil;
     }

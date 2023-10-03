@@ -46,7 +46,8 @@ class AudioModel {
     // public function for starting processing of microphone data
     func startMicrophoneProcessing(withFps:Double){
         // setup the microphone to copy to circualr buffer
-        if let manager = self.audioManager{
+        if let manager = self.audioManager,
+            let fileReader = self.fileReader{
             manager.inputBlock = self.handleMicrophone
             manager.outputBlock = self.handleSpeakerQueryWithSinusoids
             
@@ -64,6 +65,8 @@ class AudioModel {
                 }
             }
             
+            fileReader.play()
+            
         }
     }
     
@@ -80,11 +83,19 @@ class AudioModel {
             manager.pause()
             manager.inputBlock = nil
             manager.outputBlock = nil
-            
-            inputBuffer?.clear()
-            inputBuffer = nil
-            fftHelper = nil
         }
+        
+        if let file = self.fileReader{
+            file.pause()
+            file.stop()
+        }
+        
+        if let buffer = self.inputBuffer{
+            buffer.clear() // just makes zeros
+        }
+        inputBuffer = nil
+        fftHelper = nil
+        fileReader = nil
     }
     
     
@@ -104,11 +115,32 @@ class AudioModel {
                                    andBufferSize: Int64(BUFFER_SIZE))
     }()
     
+    private lazy var fileReader:AudioFileReader? = {
+            // find song in the main Bundle
+            if let url = Bundle.main.url(forResource: "satisfaction", withExtension: "mp3"){
+                // if we could find the url for the song in main bundle, setup file reader
+                // the file reader is doing a lot here becasue its a decoder
+                // so when it decodes the compressed mp3, it needs to know how many samples
+                // the speaker is expecting and how many output channels the speaker has (mono, left/right, surround, etc.)
+                var tmpFileReader:AudioFileReader? = AudioFileReader.init(audioFileURL: url,
+                                                       samplingRate: Float(audioManager!.samplingRate),
+                                                       numChannels: audioManager!.numOutputChannels)
+                
+                tmpFileReader!.currentTime = 0.0 // start from time zero!
+                
+                return tmpFileReader
+            }else{
+                print("Could not initialize audio input file")
+                return nil
+            }
+        }()
+    
     
     
     //==========================================
     // MARK: Private Methods
     // NONE for this model
+    
     
     //==========================================
     // MARK: Model Callback Methods
@@ -141,6 +173,7 @@ class AudioModel {
     
     private func handleSpeakerQueryWithSinusoids(data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32){
             if let arrayData = data, let manager = self.audioManager{
+                
                 var addFreq:Float = 0
                 var mult:Float = 1.0
                 if pulsing && pulseValue==1{
@@ -148,6 +181,19 @@ class AudioModel {
                 }else if pulsing && pulseValue > 1{
                     mult = 0.0
                 }
+                
+                if let file = self.fileReader{
+                    // get samples from audio file, pass array by reference
+                    file.retrieveFreshAudio(arrayData,
+                                numFrames: numFrames,
+                                numChannels: numChannels)
+                    
+                    // adjust volume of audio file output
+                    var volume:Float = mult*0.15 // zero out song also, if needed
+                    vDSP_vsmul(arrayData, 1, &(volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
+                                    
+                }
+                
                 phaseIncrement1 = Float(2*Double.pi*Double(sineFrequency1+addFreq)/manager.samplingRate)
                 phaseIncrement2 = Float(2*Double.pi*Double(sineFrequency2+addFreq)/manager.samplingRate)
                 phaseIncrement3 = Float(2*Double.pi*Double(sineFrequency3+addFreq)/manager.samplingRate)
@@ -158,7 +204,7 @@ class AudioModel {
                 let frame = Int(numFrames)
                 if chan==1{
                     while i<frame{
-                        arrayData[i] = (0.9*sin(phase1)+0.4*sin(phase2)+0.1*sin(phase3))*mult
+                        arrayData[i] += (0.9*sin(phase1)+0.4*sin(phase2)+0.1*sin(phase3))*mult
                         phase1 += phaseIncrement1
                         phase2 += phaseIncrement2
                         phase3 += phaseIncrement3
@@ -170,7 +216,7 @@ class AudioModel {
                 }else if chan==2{
                     let len = frame*chan
                     while i<len{
-                        arrayData[i] = (0.9*sin(phase1)+0.4*sin(phase2)+0.1*sin(phase3))*mult
+                        arrayData[i] += (0.9*sin(phase1)+0.4*sin(phase2)+0.1*sin(phase3))*mult
                         arrayData[i+1] = arrayData[i]
                         phase1 += phaseIncrement1
                         phase2 += phaseIncrement2
