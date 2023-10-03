@@ -13,7 +13,7 @@ class AudioModel {
     
     // MARK: Properties
     private var BUFFER_SIZE:Int
-    private let USE_C_SINE = false
+    var volume:Float = 0.1 // user setable volume
     
     // MARK: Public Methods
     init() {
@@ -23,20 +23,9 @@ class AudioModel {
     
     func startProcessingSinewaveForPlayback(withFreq:Float=330.0){
         sineFrequency = withFreq
-        // Two examples are given that use either objective c or that use swift
-        //   the swift code for loop is slightly slower thatn doing this in c,
-        //   but the implementations are very similar
         if let manager = self.audioManager{
-            
-            if USE_C_SINE {
-                // c for loop
-                manager.setOutputBlockToPlaySineWave(sineFrequency)
-            }else{
-                // swift for loop
-                manager.outputBlock = self.handleSpeakerQueryWithSinusoid
-            }
-            
-            
+            // swift sine wave loop creation
+            manager.outputBlock = self.handleSpeakerQueryWithSinusoid
         }
     }
     
@@ -65,31 +54,22 @@ class AudioModel {
     
     //==========================================
     // MARK: Audiocard Callbacks
-    // in obj-C it was (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
-    // and in swift this translates to:
+    //  (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels)
     
     //    _     _     _     _     _     _     _     _     _     _
     //   / \   / \   / \   / \   / \   / \   / \   / \   / \   /
     //  /   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/   \_/
     var sineFrequency:Float = 0.0 { // frequency in Hz (changeable by user)
         didSet{
-            
             if let manager = self.audioManager {
-                if USE_C_SINE {
-                    // if using objective c: this changes the frequency in the novocaine block
-                    manager.sineFrequency = sineFrequency
-                    
-                }else{
-                    // if using swift for generating the sine wave: when changed, we need to update our increment
-                    phaseIncrement = Float(2*Double.pi*Double(sineFrequency)/manager.samplingRate)
-                }
+                // if using swift for generating the sine wave: when changed, we need to update our increment
+                phaseIncrement = Float(2*Double.pi*Double(sineFrequency)/manager.samplingRate)
             }
         }
     }
     
     // SWIFT SINE WAVE
     // everything below here is for the swift implementation
-    // this can be deleted when using the objective c implementation
     private var phase:Float = 0.0
     private var phaseIncrement:Float = 0.0
     private var sineWaveRepeatMax:Float = Float(2*Double.pi)
@@ -120,6 +100,9 @@ class AudioModel {
                     i+=2
                 }
             }
+            // adjust volume of audio file output
+            vDSP_vsmul(arrayData, 1, &(self.volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
+                            
         }
     }
 }

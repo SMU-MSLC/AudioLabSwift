@@ -30,5 +30,10 @@ class ViewController: UIViewController {
         freqLabel.text = "Frequency: \(sender.value)"
     }
     
+    @IBOutlet weak var volLabel: UILabel!
+    @IBAction func changeVolume(_ sender: UISlider) {
+        self.audio.volume = sender.value
+        volLabel.text = "Volume: \(sender.value)"
+    }
 }
 
