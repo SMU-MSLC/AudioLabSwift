@@ -79,6 +79,10 @@ class MetalGraph {
         metalLayer.frame = userView.bounds
         
         userView.layer.insertSublayer(metalLayer, at:0)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.onOrientationChange), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        // TODO: register for orientation changes and update layer bounds
     
         commandQueue = self.device.makeCommandQueue()
         
@@ -101,7 +105,17 @@ class MetalGraph {
         
     }
     
+    @objc
+    func onOrientationChange(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let userView = self.metalLayer.superlayer{
+                self.metalLayer.frame = userView.bounds
+            }
+        }
+    }
+    
     deinit {
+        NotificationCenter.default.removeObserver(self)
         print("\(Self.self) object was deallocated")
     }
     
