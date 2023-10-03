@@ -77,10 +77,12 @@
 
 -(void) dealloc{
     for (int i=0; i<self.numChannels; i++) {
-        free(self.mData[i]);
+        free(_mData[i]);
+        _mData[i] = nil;
     }
-    free(self.mData);
-    self.mData = nil;
+    free(_mData);
+    _mData = nil;
+    printf("CircularBuffer object was deallocated\n");
 }
 
 #pragma mark Add Float Data
