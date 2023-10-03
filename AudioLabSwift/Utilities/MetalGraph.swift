@@ -79,6 +79,10 @@ class MetalGraph {
         metalLayer.frame = userView.bounds
         
         userView.layer.insertSublayer(metalLayer, at:0)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.onOrientationChange), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        // TODO: register for orientation changes and update layer bounds
     
         commandQueue = self.device.makeCommandQueue()
         
@@ -98,6 +102,71 @@ class MetalGraph {
         pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = false
             
         pipelineState = try! device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
+        
+    }
+    
+    @objc
+    func onOrientationChange(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let userView = self.metalLayer.superlayer{
+                self.metalLayer.frame = userView.bounds
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("\(Self.self) object was deallocated")
+    }
+    
+    func teardown(){
+
+        if let commandBuffer = commandQueue.makeCommandBuffer(){
+            commandBuffer.commit()
+            // do not try to deallocate when the command buffer is rendering
+            commandBuffer.waitUntilCompleted()
+            // this was causing errors before teardown
+        }
+        
+        timer.invalidate()
+        metalLayer.removeFromSuperlayer()
+        
+        
+        for (key,_) in vertexBuffer{
+            if let buff = vertexBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            vertexBuffer[key] = nil
+        }
+        for (key,_) in vertexColorBuffer{
+            if let buff = vertexColorBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            vertexColorBuffer[key] = nil
+        }
+        for (key,_) in boxBuffer{
+            if let buff = boxBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            boxBuffer[key] = nil
+        }
+        for (key,_) in boxColorBuffer{
+            if let buff = boxColorBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            boxColorBuffer[key] = nil
+        }
+        
+        for (key,_) in vertexPointer{
+            vertexPointer[key] = nil
+        }
+        
+        timer = nil
+        metalLayer = nil
+        commandQueue = nil
+        device = nil
+        pipelineState = nil
+        
         
     }
     
