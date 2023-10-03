@@ -132,6 +132,7 @@ static pthread_mutex_t outputAudioFileLock;
     
     for(int i=0;i<_convertedFileData.mNumberBuffers;i++){
         free(_convertedFileData.mBuffers[i].mData);
+        _convertedFileData.mBuffers[i].mData = nil;
     }
     
     _inputBlock = nil;
@@ -140,6 +141,11 @@ static pthread_mutex_t outputAudioFileLock;
     free(_inData);
     free(_outData);
     free(_outputBuffer);
+    free(_inputBuffer);
+    _inData = nil;
+    _outData = nil;
+    _outputBuffer = nil;
+    _inputBuffer = nil;
     
     
 }
@@ -335,8 +341,9 @@ static pthread_mutex_t outputAudioFileLock;
     // Initialize the audio session
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
-    // configure session to be input from microphone only, other options include: AVAudioSessionCategoryPlayAndRecord, AVAudioSessionCategoryAudioProcessing, AVAudioSessionCategoryRecord but Record is ideal for our application because we are doing "online" processing
-    if(![session setCategory:AVAudioSessionCategoryPlayAndRecord
+    // configure session, options include: AVAudioSessionCategoryPlayAndRecord, AVAudioSessionCategoryAudioProcessing, AVAudioSessionCategoryRecord
+    // https://developer.apple.com/documentation/avfaudio/avaudiosession/category
+    if(![session setCategory:AVAudioSessionCategoryMultiRoute
                        error:&error])
     {
         NSLog(@"%@ Error setting category: %@",
@@ -374,6 +381,10 @@ static pthread_mutex_t outputAudioFileLock;
         NSLog(@"Could not set preferred sample rate, Error: %@",error.localizedDescription);
     }
     
+    [session setPreferredOutputNumberOfChannels:2 error:&error];
+    if(error!=nil){
+        NSLog(@"Could not set preferred output channels, Error: %@",error.localizedDescription);
+    }
     
     [self checkSessionProperties];
     

@@ -73,17 +73,21 @@
     if (self.playing)
         [self pause];
     
-    self.readerBlock = nil;
+    _readerBlock = nil;
     
     // Close the ExtAudioFile
-    ExtAudioFileDispose(self.inputFile);
+    ExtAudioFileDispose(_inputFile);
     
-    free(self.outputBuffer);
-    free(self.holdingBuffer);
+    free(_outputBuffer);
+    free(_holdingBuffer);
+    _outputBuffer = nil;
+    _holdingBuffer = nil;
+    _callbackTimer = nil;
     
 //    [ringBuffer dealloc];
     
 //    [super dealloc];
+    printf("AudioFileReader object was deallocated\n");
 }
 
 
@@ -107,7 +111,7 @@
         // Set a few defaults and presets
         self.samplingRate = thisSamplingRate;
         self.numChannels = thisNumChannels;
-        self.latency = 512.0/self.samplingRate; // 512 samples / ( 44100 samples / sec ) default
+        self.latency = .011609977; // 512 samples / ( 44100 samples / sec ) default
         
         
         // We're going to impose a format upon the input file
@@ -298,6 +302,7 @@
     // Release the dispatch timer because it holds a reference to this class instance
     [self pause];
     if (self.callbackTimer) {
+        
         //dispatch_release(self.callbackTimer);
         self.callbackTimer = nil;
     }

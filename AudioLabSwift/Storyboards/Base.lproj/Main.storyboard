@@ -25,7 +25,7 @@
                                     <action selector="play:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fgl-mp-QvR"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="csQ-Rv-RNW">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.10000000000000001" minValue="0.0" maxValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="csQ-Rv-RNW">
                                 <rect key="frame" x="18" y="483" width="378" height="31"/>
                                 <connections>
                                     <action selector="volumeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="DvH-y6-gXy"/>

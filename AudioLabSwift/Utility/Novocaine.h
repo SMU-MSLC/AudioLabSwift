@@ -71,7 +71,7 @@ typedef void (^InputBlock)(float *data, UInt32 numFrames, UInt32 numChannels);
 
 @interface Novocaine : NSObject 
 
-@property AudioUnit audioUnit; 
+@property AudioUnit audioUnit;
 @property AudioBufferList *inputBuffer;
 @property (nonatomic, copy) OutputBlock outputBlock;
 @property (nonatomic, copy) InputBlock inputBlock;
