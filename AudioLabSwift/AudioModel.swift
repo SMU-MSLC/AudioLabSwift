@@ -75,6 +75,18 @@ class AudioModel {
         }
     }
     
+    func stop(){
+        if let manager = self.audioManager{
+            manager.pause()
+            manager.inputBlock = nil
+            manager.outputBlock = nil
+            
+            inputBuffer?.clear()
+            inputBuffer = nil
+            fftHelper = nil
+        }
+    }
+    
     
     //==========================================
     // MARK: Private Properties

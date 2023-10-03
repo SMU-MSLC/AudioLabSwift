@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     lazy var graph:MetalGraph? = {
         return MetalGraph(userView: self.userView)
     }()
+    var timer:Timer? = nil
     
     var frequency1:Float = 300 {
         didSet{
@@ -82,9 +83,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        frequency1 = 330
-        frequency2 = 660
-        frequency3 = 990
+        frequency1 = 18000
+        frequency2 = 18500
+        frequency3 = 19000
+       
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         if let graph = self.graph{
             graph.setBackgroundColor(r: 0, g: 0, b: 0, a: 1)
@@ -117,10 +123,19 @@ class ViewController: UIViewController {
         audio.play()
         
         // run the loop for updating the graph peridocially
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             self.updateGraph()
         }
-       
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        timer?.invalidate()
+        graph?.teardown()
+        graph = nil
+        audio.stop()
+        super.viewDidDisappear(animated)
+        
     }
     
     // periodically, update the graph with refreshed FFT Data

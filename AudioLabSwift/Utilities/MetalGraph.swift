@@ -101,6 +101,61 @@ class MetalGraph {
         
     }
     
+    deinit {
+        print("\(Self.self) object was deallocated")
+    }
+    
+    func teardown(){
+
+        if let commandBuffer = commandQueue.makeCommandBuffer(){
+            commandBuffer.commit()
+            // do not try to deallocate when the command buffer is rendering
+            commandBuffer.waitUntilCompleted()
+            // this was causing errors before teardown
+        }
+        
+        timer.invalidate()
+        metalLayer.removeFromSuperlayer()
+        
+        
+        for (key,_) in vertexBuffer{
+            if let buff = vertexBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            vertexBuffer[key] = nil
+        }
+        for (key,_) in vertexColorBuffer{
+            if let buff = vertexColorBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            vertexColorBuffer[key] = nil
+        }
+        for (key,_) in boxBuffer{
+            if let buff = boxBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            boxBuffer[key] = nil
+        }
+        for (key,_) in boxColorBuffer{
+            if let buff = boxColorBuffer[key]{
+                buff.setPurgeableState(MTLPurgeableState.empty)
+            }
+            boxColorBuffer[key] = nil
+        }
+        
+        for (key,_) in vertexPointer{
+            vertexPointer[key] = nil
+        }
+        
+        timer = nil
+        metalLayer = nil
+        commandQueue = nil
+        device = nil
+        pipelineState = nil
+        
+        
+    }
+    
 
     private var gridLength:Int = 0
     private func createGraphGrid(name:String,min:Float,max:Float){

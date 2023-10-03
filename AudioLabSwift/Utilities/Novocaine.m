@@ -132,6 +132,7 @@ static pthread_mutex_t outputAudioFileLock;
     
     for(int i=0;i<_convertedFileData.mNumberBuffers;i++){
         free(_convertedFileData.mBuffers[i].mData);
+        _convertedFileData.mBuffers[i].mData = nil;
     }
     
     _inputBlock = nil;
@@ -140,6 +141,7 @@ static pthread_mutex_t outputAudioFileLock;
     free(_inData);
     free(_outData);
     free(_outputBuffer);
+    free(_inputBuffer);
     
     
 }

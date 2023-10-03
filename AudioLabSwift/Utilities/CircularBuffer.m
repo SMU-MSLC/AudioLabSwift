@@ -78,6 +78,7 @@
 -(void) dealloc{
     for (int i=0; i<self.numChannels; i++) {
         free(self.mData[i]);
+        self.mData[i] = nil;
     }
     free(self.mData);
     self.mData = nil;
