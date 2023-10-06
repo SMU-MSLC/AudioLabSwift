@@ -17,6 +17,7 @@ class AudioModel {
     // the user can access these arrays at any time and plot them if they like
     var timeData:[Float]
     var fftData:[Float]
+    var ptsData:[Float]
     lazy var samplingRate:Int = {
         return Int(self.audioManager!.samplingRate)
     }()
@@ -27,6 +28,7 @@ class AudioModel {
         // anything not lazily instatntiated should be allocated here
         timeData = Array.init(repeating: 0.0, count: BUFFER_SIZE)
         fftData = Array.init(repeating: 0.0, count: BUFFER_SIZE/2)
+        ptsData = Array.init(repeating: 0.0, count: 20)
     }
     
     // public function for starting processing of microphone data
@@ -49,6 +51,12 @@ class AudioModel {
     func play(){
         if let manager = self.audioManager{
             manager.play()
+        }
+    }
+    
+    func pause(){
+        if let manager = self.audioManager{
+            manager.pause()
         }
     }
     
@@ -90,6 +98,16 @@ class AudioModel {
             //   timeData: the raw audio samples
             //   fftData:  the FFT of those same samples
             // the user can now use these variables however they like
+            let a = BUFFER_SIZE/40
+            
+            for i in 0...19 {
+                let b = i * a
+                var max:Float = -1000.0
+                for j in b...(b + a) {
+                    if (fftData[j] > max) { max = fftData[j]}
+                }
+                ptsData[i] = max
+            }
             
         }
     }

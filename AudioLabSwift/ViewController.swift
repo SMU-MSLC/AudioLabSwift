@@ -26,7 +26,6 @@ class ViewController: UIViewController {
         return MetalGraph(userView: self.userView)
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,6 +44,10 @@ class ViewController: UIViewController {
             graph.addGraph(withName: "time",
                 numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
             
+            graph.addGraph(withName: "pts",
+                           shouldNormalizeForFFT: true,
+                           numPointsInGraph: 20)
+
             
             
             graph.makeGrids() // add grids to graph
@@ -59,7 +62,10 @@ class ViewController: UIViewController {
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             self.updateGraph()
         }
-       
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        audio.pause()
     }
     
     // periodically, update the graph with refreshed FFT Data
@@ -76,7 +82,10 @@ class ViewController: UIViewController {
                 forKey: "time"
             )
             
-            
+            graph.updateGraph(
+                data: self.audio.ptsData,
+                forKey: "pts"
+            )
             
         }
         
