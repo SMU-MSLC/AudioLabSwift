@@ -60,6 +60,7 @@ class ViewController: UIViewController {
     func updateGraph(){
         // display the audio data
         if let graph = self.graph {
+            // provide some fresh samples from model for graphing
             graph.updateGraph(
                 data: self.audio.timeData, // graph the data
                 forKey: "time" // for this graph key (we only have one)
