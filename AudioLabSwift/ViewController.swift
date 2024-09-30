@@ -91,7 +91,8 @@ class ViewController: UIViewController {
                 forKey: "fftZoomed"
             )
             //TODO: should this be here in the View controller? Or in Model?
-            
+            var mx:Float = 0
+            vDSP_maxv(&self.audio.fftData[startIdx], 1, &mx, vDSP_Length(300))
         }
         
     }
